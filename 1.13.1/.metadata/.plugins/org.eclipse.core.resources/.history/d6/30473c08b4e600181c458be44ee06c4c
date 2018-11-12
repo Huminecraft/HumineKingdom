@@ -1,0 +1,29 @@
+package com.aymegike.huminekingdom.utils.managers;
+import java.io.File;
+
+import org.bukkit.Location;
+
+import com.aymegike.huminekingdom.utils.models.Kingdom;
+import com.aypi.manager.FileManager;
+
+public class EggManager {
+	
+	private FileManager fm;
+	
+	private Location loc;
+	private Kingdom kingdom;
+	
+	public EggManager() {
+		
+		fm = new com.aypi.manager.FileManager(new File(com.aymegike.huminekingdom.utils.managers.FileManager.KINGDOM_FILE+"/egg.craft"));
+		
+		for (String line : fm.getTextFile()) {
+			String[] args = line.split(" ");
+			
+		}
+		
+	}
+	
+	
+
+}

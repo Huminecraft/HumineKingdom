@@ -15,6 +15,7 @@ import org.bukkit.potion.PotionEffectType;
 import com.aymegike.huminekingdom.listener.CommandManager;
 import com.aymegike.huminekingdom.utils.MenuList;
 import com.aymegike.huminekingdom.utils.Permissions;
+import com.aymegike.huminekingdom.utils.managers.EggManager;
 import com.aymegike.huminekingdom.utils.managers.FileManager;
 import com.aymegike.huminekingdom.utils.managers.GloryManager;
 import com.aymegike.huminekingdom.utils.managers.KingdomManager;
@@ -36,6 +37,7 @@ public class HumineKingdom extends JavaPlugin {
 	private static FileManager fileManager;
 	private static KingdomManager kManager;
 	private static GloryManager gloryManager;
+	private static EggManager eggManager;
 	
 	public void onEnable() {
 		System.out.println("-------------------------------------------");
@@ -46,6 +48,7 @@ public class HumineKingdom extends JavaPlugin {
 		kManager = new KingdomManager();
 		new CommandManager(this);
 		gloryManager = new GloryManager();
+		eggManager = new EggManager();
 	}
 	
 	public void onDisable() {
@@ -105,6 +108,10 @@ public class HumineKingdom extends JavaPlugin {
 	
 	public static GloryManager getGloryManager() {
 		return gloryManager;
+	}
+	
+	public static EggManager getEggManager() {
+		return eggManager;
 	}
 	
 	//ZONE PLAYER GESTION

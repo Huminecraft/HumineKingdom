@@ -1,0 +1,16 @@
+package com.aymegike.huminekingdom.utils.managers;
+
+import java.io.File;
+import com.aypi.manager.FileManager;
+
+public class EggManager {
+	
+	private FileManager fm;
+	
+	public EggManager() {
+		
+		fm = new com.aypi.manager.FileManager(new File(com.aymegike.huminekingdom.utils.managers.FileManager.KINGDOM_FILE));
+		
+	}
+
+}

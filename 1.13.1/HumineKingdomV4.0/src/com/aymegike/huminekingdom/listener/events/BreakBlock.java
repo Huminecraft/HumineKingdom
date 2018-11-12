@@ -15,6 +15,7 @@ public class BreakBlock implements Listener {
 	
 	@EventHandler
 	public void onPlayerBreakBlock(BlockBreakEvent e) {		
+		
 		if (e.getBlock().getType() == Material.BEACON) {
 			for (Kingdom kingdom : HumineKingdom.getKingdomManager().getKingdomList()) {
 				for (int i = 0 ; i < kingdom.getShieldGenerators().size() ; i++) {
@@ -29,7 +30,7 @@ public class BreakBlock implements Listener {
 						for (OfflinePlayer op : kingdom.getMembers()) {
 							
 							if (op.isOnline()) {
-								op.getPlayer().sendMessage(ChatColor.RED+"Un bouclié a été détruit...");
+								op.getPlayer().sendMessage(ChatColor.RED+"Un boucliÃ© a Ã©tÃ© dÃ©truit...");
 								op.getPlayer().playSound(op.getPlayer().getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 5, 1);
 							}
 							
@@ -38,6 +39,12 @@ public class BreakBlock implements Listener {
 				}
 			}
 		}
+		
+		if (e.getBlock().getType() == Material.DRAGON_EGG) {
+			HumineKingdom.getEggManager().getEgg().destroyEgg();
+		}
+		
+		
 		
 	}
 

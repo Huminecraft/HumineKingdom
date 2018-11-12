@@ -1,0 +1,13 @@
+package com.aymegike.huminekingdom.utils.managers;
+
+public class EggManager {
+	
+	private FileManager fm;
+	
+	public EggManager() {
+		
+		fm = new FileManager(new File(com.aymegike.huminekingdom.utils.managers.FileManager.KINGDOM_FILE));
+		
+	}
+
+}

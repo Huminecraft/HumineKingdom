@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="org.bukkit.event.block.BlockPlaceEvent"/>
+<fullyQualifiedTypeName name="com.aymegike.huminekingdom.utils.managers.EggManager"/>
+<fullyQualifiedTypeName name="com.aymegike.huminekingdom.utils.managers.FileManager"/>
+<fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="com.aymegike.huminekingdom.utils.models.Egg"/>
+<fullyQualifiedTypeName name="net.minecraft.server.v1_13_R2.ItemStack"/>
+<fullyQualifiedTypeName name="org.bukkit.block.Block"/>
+<fullyQualifiedTypeName name="org.bukkit.Location"/>
+<fullyQualifiedTypeName name="net.minecraft.server.v1_13_R2.WorldGenVillagePieces.Material"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="org.bukkit.Material"/>
+<fullyQualifiedTypeName name="com.aypi.manager.FileManager"/>
+<fullyQualifiedTypeName name="org.bukkit.Bukkit"/>
+<fullyQualifiedTypeName name="com.aymegike.huminekingdom.HumineKingdom"/>
+</qualifiedTypeNameHistroy>

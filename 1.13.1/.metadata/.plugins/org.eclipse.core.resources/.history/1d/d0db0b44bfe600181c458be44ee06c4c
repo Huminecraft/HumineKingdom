@@ -1,0 +1,47 @@
+package com.aymegike.huminekingdom.utils.models;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+
+public class Egg {
+	
+	private Location location;
+	private Kingdom kingdom;
+	
+	private HashMap<Location, Material> blockList;
+	
+	public Egg(Kingdom kingdom, Location location) {
+		this.location = location;
+		this.kingdom = kingdom;
+		spawnEgg();
+	}
+	
+	public Location getLocation() {
+		return this.location;
+	}
+	
+	public Kingdom getKingdom() {
+		return this.kingdom;
+	}
+	
+	private void spawnEgg() {
+		blockList = HashMap<Location, Material>();
+		for (int x = location.getBlockX()-1 ; x<location.getBlockX()+1 ; x++) {
+			for (int z = location.getBlockZ()-1 ; z<location.getBlockZ()+1 ; z++) {
+				Block block = new Location(location.getWorld(), x, location.getY()-1, z).getBlock();
+				blockList.add(block.getLocation(), block.getType());
+			}
+		}
+	}
+	
+	public void destroyEgg() {
+		for (Location loc : blockList) {
+			block.
+		}
+	}
+	
+}

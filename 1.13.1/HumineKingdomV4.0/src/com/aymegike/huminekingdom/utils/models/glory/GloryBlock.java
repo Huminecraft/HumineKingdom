@@ -1,6 +1,5 @@
 package com.aymegike.huminekingdom.utils.models.glory;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
@@ -16,8 +15,6 @@ public class GloryBlock extends GloryEvent{
 	@Override
 	public void onPlayerBeGlorious(Player player, Event e) {
 		//Block block = ((BlockPlaceEvent) e).getBlock();
-		
-		Bukkit.broadcastMessage(player.getName()+": ");
 		
 	}
 
