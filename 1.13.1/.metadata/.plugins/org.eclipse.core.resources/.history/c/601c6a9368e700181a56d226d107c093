@@ -217,7 +217,7 @@ public class Kingdom {
 		shieldGenerator.getLocation().getWorld().createExplosion(shieldGenerator.getLocation(), 4.0f);
 		for (OfflinePlayer pls : members) {
 			if (pls.isOnline()) {
-				pls.getPlayer().sendMessage(ChatColor.RED+"Un gÃ©nÃ©rateur de bouclier a Ã©tÃ© dÃ©sactivÃ©.");
+				pls.getPlayer().sendMessage(ChatColor.RED+"Un générateur de bouclier a été désactivé.");
 			}
 		}
 	}
@@ -228,7 +228,7 @@ public class Kingdom {
 		updateShield(shieldGenerator);
 		for (OfflinePlayer pls : members) {
 			if (pls.isOnline()) {
-				pls.getPlayer().sendMessage(ChatColor.GREEN+"Un gï¿½nï¿½rateur de bouclier a Ã©tÃ© rÃ©activÃ©.");
+				pls.getPlayer().sendMessage(ChatColor.GREEN+"Un générateur de bouclier a été réactivé.");
 			}
 		}
 	}
