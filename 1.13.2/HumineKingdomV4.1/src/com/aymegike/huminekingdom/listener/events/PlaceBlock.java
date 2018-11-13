@@ -49,7 +49,7 @@ public class PlaceBlock implements Listener {
 			
 			if (HumineKingdom.getPlayerKingdom(player) != null) {
 				
-				//e.setCancelled(true);
+				e.setCancelled(true);
 				for (int i = 0 ; i <= player.getInventory().getSize() ; i++) {
 					if (player.getInventory().getItem(i) != null && player.getInventory().getItem(i).getType() == Material.DRAGON_EGG) {
 						player.getInventory().setItem(i, null);
