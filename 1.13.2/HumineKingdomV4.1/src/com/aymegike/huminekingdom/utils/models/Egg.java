@@ -10,7 +10,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import com.aymegike.huminekingdom.HumineKingdom;
 import com.aypi.utils.Timer;
@@ -18,11 +20,15 @@ import com.aypi.utils.inter.TimerFinishListener;
 
 public class Egg {
 	
+	final public static int ZONE_SIZE_R = 10; 
+	
 	private Location location;
 	private Kingdom kingdom;
 	
 	private int task;
 	private int task2;
+	private int task3;
+	private int task4;
 	
 	private int timer = 20;
 	
@@ -52,12 +58,59 @@ public class Egg {
 
 	public void destroyEgg() {
 		replaceBlocks();
-		//TODO ANIMATION
+		Bukkit.getScheduler().cancelTask(task3);
 	}
 	
+	private void radialParticle(Particle particle, double h) {
+		
+		task4 = Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("HumineKingdom"), new Runnable() {
+			
+			double t = 0;
+			Location loc = new Location(location.getWorld(), location.getX()+0.5, location.getY()+h, location.getZ()+0.5);
+			
+			@Override
+			public void run() {
+				
+				t += 0.1*Math.PI;
+				for (double theta = 0 ; theta <= 2*Math.PI ; theta += Math.PI/32) {
+					double x = t*Math.cos(theta);
+					double y = Math.exp(-0.1*t) * Math.sin(t) + 1.5;
+					double z = t*Math.sin(theta);
+					loc.add(x, y, z);
+					spawnParticle(particle, loc, 0, 0, 0, 0);
+					loc.subtract(x, y, z);
+				}
+				
+				if (t > 20) {
+					Bukkit.getScheduler().cancelTask(task4);
+				}
+				
+			}
+		}, 1, 1);
+		
+	}
 	
-	
-	
+	private void particleEgg() {
+		final Location location = new Location(this.location.getWorld(), this.location.getBlockX(), this.location.getY(), this.location.getBlockZ());
+		task3 = Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("HumineKingdom"), new Runnable() {
+			
+			double radius = 5;
+			float y = 0;
+			
+			@Override
+			public void run() {
+				spawnParticle(Particle.PORTAL, location, 5, 1, 1, 1);
+				
+				y += 0.1;
+				double x = Math.sin((y * radius)+1);
+				double z = Math.cos((y * radius)+1);
+				spawnParticle(Particle.END_ROD, new Location(location.getWorld(), location.getX()+x+0.5, location.getY() + 1.5, location.getZ() + z+0.5), 0, 0, 0, 0);
+				playSound(Sound.BLOCK_BEACON_AMBIENT, location);
+			}
+			
+		}, 5, 5);
+		
+	}
 	
 	
 	private void registerBlockBefore() {
@@ -71,7 +124,7 @@ public class Egg {
 		
 		for (int x = location.getBlockX()-2 ; x <=location.getBlockX()+2 ; x++) {
 			for (int z = location.getBlockZ()-2 ; z <=location.getBlockZ()+2 ; z++) {
-				for (int y = location.getBlockY() ; y <=location.getBlockY()+4 ; y++) {
+				for (int y = location.getBlockY() ; y <=location.getBlockY()+7 ; y++) {
 					Block block = new Location(location.getWorld(), x, y, z).getBlock();
 					if (block.getType() != Material.DRAGON_EGG)
 						block.breakNaturally();
@@ -100,7 +153,7 @@ public class Egg {
 		while(new Location(world, loc.getX(), loc.getY()+i, loc.getZ()).getBlock().getType() == Material.AIR && i < 6 && loc.getBlockY()+i < 255){
 			i++;
 		}
-		double maxHeight = i-1;
+		double maxHeight = i-2;
 		playSound(Sound.BLOCK_END_PORTAL_SPAWN, location);
 		new Timer(Bukkit.getPluginManager().getPlugin("HumineKingdom"), 2, new TimerFinishListener() {
 			
@@ -139,6 +192,20 @@ public class Egg {
 						}
 					}).start();
 					
+					new Timer(Bukkit.getPluginManager().getPlugin("HumineKingdom"), 3, new TimerFinishListener() {
+
+						@Override
+						public void execute() {
+							radialParticle(Particle.FIREWORKS_SPARK, 0);
+							radialParticle(Particle.FLAME, 0.2);
+							playSound(Sound.ENTITY_ENDER_DRAGON_HURT, loc);
+							for (Entity e : location.getWorld().getNearbyEntities(loc, 5, 5, 5)) {
+								e.setVelocity(new Vector(e.getLocation().getX() - location.getX(), e.getLocation().getY() - (location.getY()-1), e.getLocation().getZ() - location.getZ()).multiply(0.2));
+							}
+						}
+						
+					}).start();
+					
 				}
 				
 			}
@@ -163,7 +230,7 @@ public class Egg {
 				new Location(loc.getWorld(), x-1, y+i, z-1).getBlock().getType() == Material.AIR) && i < 75 && y+i < 100){
 			i++;
 		}
-		final int I = i;
+		final int I = i-3;
 		
 		task2 = Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("HumineKingdom"), new Runnable(){
 
@@ -241,7 +308,7 @@ public class Egg {
 					Bukkit.getWorld(loc.getWorld().getName()).spawnFallingBlock(l, bd);
 					l.getBlock().setType(Material.AIR);
 					
-					l = new Location(loc.getWorld(), x+1.5, y+I+1, z+1.5);
+					l = new Location(loc.getWorld(), x+1.5, y+I+1.5, z+1.5);
 					b = l.getBlock();
 					b.setType(Material.END_ROD);
 					bd = b.getBlockData();
@@ -250,6 +317,7 @@ public class Egg {
 					Bukkit.getWorld(loc.getWorld().getName()).spawnFallingBlock(l, bd);
 					l.getBlock().setType(Material.AIR);
 					playSound(Sound.ENTITY_ENDER_DRAGON_HURT, l);
+					l.getWorld().strikeLightningEffect(l);
 				}
 				
 				if (timer == 8) {
@@ -262,7 +330,7 @@ public class Egg {
 					Bukkit.getWorld(loc.getWorld().getName()).spawnFallingBlock(l, bd);
 					l.getBlock().setType(Material.AIR);
 					
-					l = new Location(loc.getWorld(), x+1.5, y+I+1, z-0.5);
+					l = new Location(loc.getWorld(), x+1.5, y+I+1.5, z-0.5);
 					b = l.getBlock();
 					b.setType(Material.END_ROD);
 					bd = b.getBlockData();
@@ -271,6 +339,7 @@ public class Egg {
 					Bukkit.getWorld(loc.getWorld().getName()).spawnFallingBlock(l, bd);
 					l.getBlock().setType(Material.AIR);
 					playSound(Sound.ENTITY_ENDER_DRAGON_HURT, l);
+					l.getWorld().strikeLightningEffect(l);
 				}
 		
 				if (timer == 5 ) {
@@ -283,7 +352,7 @@ public class Egg {
 					Bukkit.getWorld(loc.getWorld().getName()).spawnFallingBlock(l, bd);
 					l.getBlock().setType(Material.AIR);
 					
-					l = new Location(loc.getWorld(), x-0.5, y+I+1, z-0.5);
+					l = new Location(loc.getWorld(), x-0.5, y+I+1.5, z-0.5);
 					b = l.getBlock();
 					b.setType(Material.END_ROD);
 					bd = b.getBlockData();
@@ -292,6 +361,7 @@ public class Egg {
 					Bukkit.getWorld(loc.getWorld().getName()).spawnFallingBlock(l, bd);
 					l.getBlock().setType(Material.AIR);
 					playSound(Sound.ENTITY_ENDER_DRAGON_HURT, l);
+					l.getWorld().strikeLightningEffect(l);
 				}
 				
 				if (timer == 3) {
@@ -304,7 +374,7 @@ public class Egg {
 					Bukkit.getWorld(loc.getWorld().getName()).spawnFallingBlock(l, bd);
 					l.getBlock().setType(Material.AIR);
 					
-					l = new Location(loc.getWorld(), x-0.5, y+I+1, z+1.5);
+					l = new Location(loc.getWorld(), x-0.5, y+I+1.5, z+1.5);
 					b = l.getBlock();
 					b.setType(Material.END_ROD);
 					bd = b.getBlockData();
@@ -313,12 +383,14 @@ public class Egg {
 					Bukkit.getWorld(loc.getWorld().getName()).spawnFallingBlock(l, bd);
 					l.getBlock().setType(Material.AIR);
 					playSound(Sound.ENTITY_ENDER_DRAGON_HURT, l);
+					l.getWorld().strikeLightningEffect(l);
 				}
 				
 				if(timer == 0){
 					Bukkit.getScheduler().cancelTask(task2);
 					new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).getBlock().setType(Material.BEDROCK);
 					timer = 20;
+					particleEgg();
 				}
 				if(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).getBlock().getType() == Material.QUARTZ_BLOCK){
 					new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).getBlock().setType(Material.PURPUR_BLOCK);
