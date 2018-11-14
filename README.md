@@ -1,6 +1,6 @@
 # HumineKingdom
   
-encodé en UTF-8 **clone le depot *Librairies* ** pour utiliser le projet.    
+encodé en UTF-8 **clone le depot** ***Librairies*** pour utiliser le projet.    
 *version:*
 * V4.0
 	* version AYPIV.1.3
