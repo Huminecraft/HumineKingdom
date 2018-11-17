@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 
 import com.aymegike.huminekingdom.HumineKingdom;
 import com.aymegike.huminekingdom.utils.MenuList;
+import com.aymegike.huminekingdom.utils.Message;
 import com.aymegike.huminekingdom.utils.Permissions;
 import com.aymegike.huminekingdom.utils.models.Grade;
 import com.aymegike.huminekingdom.utils.models.Kingdom;
@@ -35,18 +36,18 @@ public class PlayerChatEvent implements Listener {
 			String[] getSpace = msg.split(" ");
 			if(getSpace.length == 1){
 				if(HumineKingdom.getKingdom(msg) != null){
-					player.sendMessage(ChatColor.RED+msg+" est un nom super cool ! Du coup il est déjà utilisé...");
+					player.sendMessage(Message.KINGDOM_NAME_CANCEL(msg));
 					player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 					getNameOfKingdom.remove(player);
 					return;
 				}
-				player.sendMessage(ChatColor.DARK_PURPLE+"Construction du futur empire en cours...");
+				player.sendMessage(Message.KINGDOM_VALIDE_CONSTRUCT);
 				player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 5, 1);
 				new Kingdom(msg, player, "Roi");
 				MenuList.mainKingdomMenu(player).openMenu();
 				
 			}else{				
-				player.sendMessage(ChatColor.RED+"Tu ne peut pas avoir d'espace dans le nom de ton royaume. Un peut de respect pour lui quoi...");
+				player.sendMessage(Message.KINGDOM_INVALIDE_NAME);
 				player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 			
 			}
@@ -59,17 +60,17 @@ public class PlayerChatEvent implements Listener {
 			if(HumineKingdom.getPlayerKingdom(player) != null){
 				if(Bukkit.getPlayer(msg) != null){
 					if(HumineKingdom.getPlayerKingdom(Bukkit.getOfflinePlayer(msg)) == null){
-						player.sendMessage(ChatColor.DARK_PURPLE+msg+" a reçu l'invitation !");
+						player.sendMessage(Message.KINGDOM_INVATION_NAME(msg));
 						player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 5, 1);
 						MenuList.invitationMenu(player, Bukkit.getPlayer(msg)).openMenu();;
 					}else{
-						player.sendMessage(ChatColor.DARK_PURPLE+"C'est bête mais "+msg+" fait déja partie d'un royaume !");
+						player.sendMessage(Message.KINGDOM_INVATION_ARLY_INVITED(msg));
 						player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 					}
 					
 				}else{
 					
-					player.sendMessage(ChatColor.RED+msg+" n'est pas connecté... Tu est sur d'avoir bien écrit le nom de ton ami ?");
+					player.sendMessage(Message.KINGDOM_INVITATION_NAME_DONT_CONNECT(msg));
 					player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 				
 				}
@@ -84,18 +85,18 @@ public class PlayerChatEvent implements Listener {
 			String[] getSpace = msg.split(" ");
 			if(getSpace.length == 1){
 				if(HumineKingdom.getPlayerKingdom(player).getGrade(msg) != null){
-					player.sendMessage(ChatColor.RED+msg+" est un nom super cool ! Du coup il est déjà utilisé...");
+					player.sendMessage(Message.GRADE_NAME_CANCEL(msg));
 					player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 					getNameOfGrade.remove(player);
 					return;
 				}
-				player.sendMessage(ChatColor.DARK_PURPLE+"Construction du grade en cours...");
+				player.sendMessage(Message.GRADE_VALIDE_CONSTRUCT);
 				player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 5, 1);
 				HumineKingdom.getPlayerKingdom(player).addGrade(new Grade(HumineKingdom.getPlayerKingdom(player), msg));
 				MenuList.gradeListMenu(player).openMenu();
 				
 			}else{				
-				player.sendMessage(ChatColor.RED+"Tu ne peut pas avoir d'espace dans le nom de ton grade. Un peut de respect pour lui quoi...");
+				player.sendMessage(Message.GRADE_INVALIDE_NAME);
 				player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 			
 			}
@@ -110,19 +111,19 @@ public class PlayerChatEvent implements Listener {
 			
 			if(getSpace.length == 1){
 				if(HumineKingdom.getPlayerKingdom(player).getShematic(msg) != null){
-					player.sendMessage(ChatColor.RED+msg+" est un nom super cool ! Du coup il est déjà utilisé...");
+					player.sendMessage(Message.SHEMATIC_NAME_CANCEL(msg));
 					player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 					getNameOfGrade.remove(player);
 					return;
 				}
-				player.sendMessage(ChatColor.DARK_PURPLE+"Construction du plans en cours...");
+				player.sendMessage(Message.SHEMATIC_VALIDE_CONSTRUCT);
 				player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 5, 1);
 				HumineKingdom.getPlayerKingdom(player).addShematic(new Shematic(HumineKingdom.getPlayerKingdom(player), msg, PlayerClick.getShieldGenerator.get(player)));
 				MenuList.shematicMenu(player).openMenu();
 				PlayerClick.getShieldGenerator.remove(player);
 				
 			} else{				
-				player.sendMessage(ChatColor.RED+"Tu ne peut pas avoir d'espace dans le nom de ton plans. Un peut de respect pour lui quoi...");
+				player.sendMessage(Message.SHEMATIC_INVALIDE_NAME);
 				player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 			
 			}

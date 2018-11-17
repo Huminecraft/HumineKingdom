@@ -33,7 +33,7 @@ public class MenuList {
 	public static Menu noKingdomMenu(Player player) {
 		closePlayerMenu(player);
 
-		Menu menu = new Menu(player, ChatColor.DARK_PURPLE+"Tu n'as encore de royaume !", 3*9, true);
+		Menu menu = new Menu(player, ChatColor.DARK_PURPLE+"Tu n'as pas encore de royaume !", 3*9, true);
 		
 		ArrayList<String> lore = new ArrayList<String>();
 		
@@ -41,7 +41,7 @@ public class MenuList {
 		ItemMeta emeraldM = emerald.getItemMeta();
 		emeraldM.setDisplayName(ChatColor.GREEN+"INFORMATION !");
 		lore.add(ChatColor.DARK_PURPLE+"Afin de devenir plus puissant, tu");
-		lore.add(ChatColor.DARK_PURPLE+"peut créer ton royaume et recruter");
+		lore.add(ChatColor.DARK_PURPLE+"peux créer ton royaume et recruter");
 		lore.add(ChatColor.DARK_PURPLE+"des amis pour dominer le monde de "+ChatColor.WHITE+"HumineCraft"+ChatColor.DARK_PURPLE+" !");
 		emeraldM.setLore(lore);
 		emerald.setItemMeta(emeraldM);
@@ -81,7 +81,7 @@ public class MenuList {
 			
 			@Override
 			public void onItemClick() {
-				 player.sendMessage(ChatColor.GREEN+"Chouette ! Tout d'abord il faut donner un nom à ton royaume ! "+ChatColor.DARK_PURPLE+"(Tu ne pourras pas le modifier)");
+				 player.sendMessage(Message.KINGDOM_CREATE);
 				 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 5, 5);
 				 if(!PlayerChatEvent.getNameOfKingdom.contains(player))
 					 PlayerChatEvent.getNameOfKingdom.add(player);		
@@ -97,7 +97,7 @@ public class MenuList {
 			public void onItemClick() {
 				menu.closePlayerMenu();
 				player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
-				player.sendMessage(ChatColor.DARK_PURPLE+"Dommage comme vous voulez...");
+				player.sendMessage(Message.KINGDOM_CANCEL);
 				MenuList.user.remove(menu);
 			}
 			
@@ -313,12 +313,11 @@ public class MenuList {
 				menu.closePlayerMenu();			
 				
 				if (HumineKingdom.getPlayerGrade(player) != null && HumineKingdom.getPlayerGrade(player).containPermission(Permissions.INVITE.getPermission())) {
-	
 					player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
 					PlayerChatEvent.getNameOfPlayer.add(player);
-					player.sendMessage(ChatColor.GREEN+"Besoin d'une nouvelle recrue ? Ecris le nom du nouveau \njoueur pour lui envoyer une invitation.");
+					player.sendMessage(Message.KINGDOM_INVITATION);
 				}else{
-					  player.sendMessage(ChatColor.RED+"Désolé l'ami ! Mais tu n'as pas les droits pour inviter du monde ici...\n"+ChatColor.ITALIC+"(demande de l'aide a un adulte)");
+					  player.sendMessage(Message.PERMISSION);
 					  player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 				}
 					
@@ -412,7 +411,7 @@ public class MenuList {
 				HumineKingdom.getPlayerKingdom(sender).addMember(receiver);
 				for(OfflinePlayer op : HumineKingdom.getPlayerKingdom(sender).getMembers()) {
 					if (op.isOnline()) {
-						op.getPlayer().sendMessage(ChatColor.GREEN+"Bienvenue dans le royaume "+ChatColor.WHITE+HumineKingdom.getPlayerKingdom(sender).getName()+ChatColor.GREEN+" "+receiver.getName()+" !");
+						op.getPlayer().sendMessage(Message.KINGDOM_WELCOM(sender, receiver));
 						
 					}
 				}
@@ -425,10 +424,10 @@ public class MenuList {
 			@Override
 			public void onItemClick() {
 				receiver.playSound(sender.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 50, 1);
-				receiver.sendMessage(ChatColor.RED+"Vraiment ? Bon... tant pis pour eux !");
-				sender.sendMessage(ChatColor.RED+"Finalement "+receiver.getName()+" n'as pas voulu nous rejoindre... zut alors ! ");
+				receiver.sendMessage(Message.KINGDOM_INVITATION_REFUSE_RECEIVER);
+				sender.sendMessage(Message.KINGDOM_INVITATION_REFUSE_SENDER(receiver));
 				sender.playSound(sender.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
-				receiver.closeInventory();
+				menu.closePlayerMenu();
 				MenuList.user.remove(menu);
 			}
 			
@@ -513,7 +512,7 @@ public class MenuList {
 					if (HumineKingdom.getPlayerGrade(target) != null && HumineKingdom.getPlayerGrade(target).getName().equalsIgnoreCase(HumineKingdom.getPlayerKingdom(target).getKingGradeName())) {
 						for(OfflinePlayer op : HumineKingdom.getPlayerKingdom(player).getMembers()) {
 							if (op.isOnline()) {
-								op.getPlayer().sendMessage(ChatColor.RED+"Tentative de mutinerie de la part de "+ChatColor.WHITE+player.getName()+ChatColor.RED+" dejouer !");
+								op.getPlayer().sendMessage(Message.KINGDOM_MUNITY(player));
 								op.getPlayer().playSound(op.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 5, 1);
 							}
 						}
@@ -526,10 +525,10 @@ public class MenuList {
 						player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
 						MenuList.addPlayerGrade(player, target).openMenu();
 					} else if (player.getName().equalsIgnoreCase(target.getName())){
-						player.sendMessage(ChatColor.RED+"Tu ne peux pas modifier ton propre grade.");
+						player.sendMessage(Message.GRADE_CAN_CHANGE_BY_YOUR_SELF);
 						player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
 					} else {
-						player.sendMessage(ChatColor.RED+"Désolé l'ami mais tu n'en as pas la permission. \n(Demande le l'aide a un adulte)");
+						player.sendMessage(Message.PERMISSION);
 						player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
 					}
 				} else {
@@ -550,7 +549,7 @@ public class MenuList {
 					if (HumineKingdom.getPlayerGrade(target) != null && HumineKingdom.getPlayerGrade(target).getName().equalsIgnoreCase(HumineKingdom.getPlayerKingdom(player).getKingGradeName()) && player.getName().equalsIgnoreCase(target.getName())) {
 						for (OfflinePlayer op : HumineKingdom.getPlayerKingdom(target).getMembers()) {
 							if (op.isOnline()) {
-								op.getPlayer().sendMessage(HumineKingdom.getPlayerKingdom(player).getName()+ChatColor.RED+" n'est plus. Le "+HumineKingdom.getPlayerGrade(player).getName()+" "+ChatColor.WHITE+player.getName()+ChatColor.RED+" y a mis fin.");
+								op.getPlayer().sendMessage(Message.KINGDOM_DELET(HumineKingdom.getPlayerKingdom(player), HumineKingdom.getPlayerGrade(player), player));
 							}
 						}
 	
@@ -559,7 +558,7 @@ public class MenuList {
 					} else if (HumineKingdom.getPlayerGrade(target) != null && HumineKingdom.getPlayerGrade(target).getName().equalsIgnoreCase(HumineKingdom.getPlayerKingdom(target).getKingGradeName())) { 
 						for(OfflinePlayer op : HumineKingdom.getPlayerKingdom(player).getMembers()) {
 							if (op.isOnline()) {
-								op.getPlayer().sendMessage(ChatColor.RED+"Tentative de mutinerie de la part de "+ChatColor.WHITE+player.getName()+ChatColor.RED+" dejouer !");
+								op.getPlayer().sendMessage(Message.KINGDOM_MUNITY(player));
 								op.getPlayer().playSound(op.getPlayer().getLocation(), Sound.ENTITY_VILLAGER_NO, 5, 1);
 							}
 						}
@@ -567,7 +566,7 @@ public class MenuList {
 					} else if (HumineKingdom.getPlayerGrade(player) != null && HumineKingdom.getPlayerGrade(player).containPermission(Permissions.INVITE.getPermission()) || player.getName().equalsIgnoreCase(target.getName())) {
 						for (OfflinePlayer op : HumineKingdom.getPlayerKingdom(player).getMembers()) {
 							if (op.isOnline()) {
-								op.getPlayer().sendMessage(ChatColor.RED+target.getName()+" a quitter "+ChatColor.WHITE+HumineKingdom.getPlayerKingdom(player).getName()+ChatColor.RED+" pour de bon.");
+								op.getPlayer().sendMessage(Message.KINGDOM_LEFT(player));
 								op.getPlayer().playSound(op.getPlayer().getLocation(), Sound.ENTITY_FIREWORK_ROCKET_SHOOT, 5, 1);
 							}
 						}
@@ -579,7 +578,7 @@ public class MenuList {
 						
 					} else {
 						player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
-						player.sendMessage(ChatColor.RED+"Désolé l'ami ! Mais tu n'as pas les droits pour virer du monde d'ici...\n"+ChatColor.ITALIC+"(demande de l'aide a un adulte)");
+						player.sendMessage(Message.PERMISSION);
 					}
 					
 				}
@@ -664,15 +663,15 @@ public class MenuList {
 							g.addMember(target);
 							menu.closePlayerMenu();
 							MenuList.playerProfilMenu(player, target).openMenu();
-							player.sendMessage(target.getName()+ChatColor.GREEN+" a était promus "+g.getName());
+							player.sendMessage(Message.GRADE_UP(target, g));
 							player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
 							if (target.isOnline()) {
-								target.getPlayer().sendMessage(ChatColor.GREEN+"Felicitation tu a était promus "+g.getName()+" !");
+								target.getPlayer().sendMessage(Message.GRADE_UP_TARGET(g));
 								target.getPlayer().playSound(target.getPlayer().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 5, 1);
 							}
 						} else {
 							MenuList.membersMenu(player).openMenu();
-							player.sendMessage(ChatColor.RED+"Il y a comme un problème");
+							player.sendMessage(Message.PROBLEM);
 						}
 					}
 					
@@ -733,7 +732,7 @@ public class MenuList {
 						if (HumineKingdom.getPlayerKingdom(player).getGrade(grade.getName()) != null) {
 							MenuList.gradeMenu(player, grade).openMenu();							
 						} else {
-							player.sendMessage(ChatColor.RED+"Ce grade a été supprimé.");
+							player.sendMessage(Message.PROBLEM);
 							MenuList.gradeListMenu(player).openMenu();
 						}
 					}
@@ -774,10 +773,10 @@ public class MenuList {
 				if (HumineKingdom.getPlayerGrade(player) != null && HumineKingdom.getPlayerGrade(player).containPermission(Permissions.GRADE.getPermission())) {
 					player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
 					menu.closePlayerMenu();
-					player.sendMessage(ChatColor.DARK_PURPLE+"Tout d'abords il faut donner un nom a ce nouveau grade.");
+					player.sendMessage(Message.GRADE_GIVE_NAME);
 					PlayerChatEvent.getNameOfGrade.add(player);
 				} else {
-					player.sendMessage(ChatColor.RED+"Désolé l'ami mais tu n'en as pas la permission. \n(Demande le l'aide a un adulte)");
+					player.sendMessage(Message.PERMISSION);
 					player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
 				}
 			}
@@ -878,11 +877,11 @@ public class MenuList {
 					}  else if (HumineKingdom.getPlayerGrade(player) == grade) {
 						
 						player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
-						player.sendMessage(ChatColor.RED+"Désolé l'ami mais tu n'en as pas la permission de modifier ton propre grade.");
+						player.sendMessage(Message.GRADE_AUTO_DELET);
 						
 					} else {
 						player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
-						player.sendMessage(ChatColor.RED+"Désolé l'ami mais tu n'en as pas la permission. \n(Demande le l'aide a un adulte)");
+						player.sendMessage(Message.PERMISSION);
 					}
 				} else {
 					MenuList.gradeListMenu(player).openMenu();
@@ -901,7 +900,7 @@ public class MenuList {
 					if (HumineKingdom.getPlayerGrade(player) != null && HumineKingdom.getPlayerGrade(player).containPermission(Permissions.GRADE.getPermission()) && HumineKingdom.getPlayerGrade(player) != grade) {
 						player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
 						menu.closePlayerMenu();
-						player.sendMessage(ChatColor.RED+"Le grade "+ChatColor.WHITE+grade.getName()+ChatColor.RED+" a était supprimé");
+						player.sendMessage(Message.GRADE_DELET(grade));
 						grade.getKingdom().removeGrade(grade);
 						grade.delet();
 						MenuList.gradeListMenu(player).openMenu();
@@ -909,11 +908,11 @@ public class MenuList {
 					}  else if (HumineKingdom.getPlayerGrade(player) == grade) {
 						
 						player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
-						player.sendMessage(ChatColor.RED+"Désolé l'ami mais tu n'en as pas la permission de modifier ton propre grade.");
+						player.sendMessage(Message.GRADE_AUTO_DELET);
 						
 					} else {
 						player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
-						player.sendMessage(ChatColor.RED+"Désolé l'ami mais tu n'en as pas la permission. \n(Demande le l'aide a un adulte)");
+						player.sendMessage(Message.PERMISSION);
 					}
 				} else {
 					MenuList.gradeListMenu(player).openMenu();
@@ -1023,7 +1022,7 @@ public class MenuList {
 							MenuList.gradeMenu(player, grade).openMenu();
 						}else {
 							player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
-							player.sendMessage(ChatColor.RED+"Désolé l'ami mais tu n'en as pas la permission. \n(Demande le l'aide a un adulte)");
+							player.sendMessage(Message.PERMISSION);
 						}
 					
 					} else {
@@ -1111,7 +1110,7 @@ public class MenuList {
 					menu.closePlayerMenu();
 					MenuList.shematicMenu(player).openMenu();
 				} else {
-					player.sendMessage(ChatColor.RED+"Désolé l'ami mais tu n'en as pas la permission. \n(Demande le l'aide a un adulte)");
+					player.sendMessage(Message.PERMISSION);
 					player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
 				}
 			}
@@ -1222,9 +1221,9 @@ public class MenuList {
 	
 					player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
 					PlayerClick.getBeacon.add(player);
-					player.sendMessage(ChatColor.GREEN+"Besoin d'un nouveau plans de construction ? Clique sur un de tes generateurs de boucliers !");
+					player.sendMessage(Message.SHEMATIC_CREATE);
 				}else{
-					  player.sendMessage(ChatColor.RED+"Désolé l'ami ! Mais tu n'as pas les droits pour inviter du creer des plans ici...\n"+ChatColor.ITALIC+"(demande de l'aide a un adulte)");
+					  player.sendMessage(Message.PERMISSION);
 					  player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 				}
 					
@@ -1327,7 +1326,7 @@ public class MenuList {
 			
 			@Override
 			public void onItemClick() {
-				player.sendMessage(ChatColor.RED+"Tu a supprimé "+shemtatic.getName());
+				player.sendMessage(Message.SHEMATIC_DELET(shemtatic));
 				shemtatic.getkingdom().removeShematic(shemtatic);
 				menu.closePlayerMenu();
 				MenuList.shematicMenu(player).openMenu();
@@ -1340,10 +1339,10 @@ public class MenuList {
 			@Override
 			public void onItemClick() {
 				menu.closePlayerMenu();
-				player.sendMessage(ChatColor.GREEN+"Scanne de la zone en cours...");
+				player.sendMessage(Message.SHEMATIC_SCAN);
 				player.playSound(player.getLocation(), Sound.BLOCK_BEACON_AMBIENT, 5, 1);
 				shemtatic.refresh();
-				player.sendMessage(ChatColor.GREEN+"Scanne terminé.");
+				player.sendMessage(Message.SHEMATIC_SCAN_FINISH);
 				player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 5, 1);
 				MenuList.shematicsMenu(player, shemtatic).openMenu();
 			}

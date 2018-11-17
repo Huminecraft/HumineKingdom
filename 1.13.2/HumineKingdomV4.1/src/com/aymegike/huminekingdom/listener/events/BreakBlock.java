@@ -1,6 +1,5 @@
 package com.aymegike.huminekingdom.listener.events;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -9,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import com.aymegike.huminekingdom.HumineKingdom;
+import com.aymegike.huminekingdom.utils.Message;
 import com.aymegike.huminekingdom.utils.models.Kingdom;
 
 public class BreakBlock implements Listener {
@@ -30,7 +30,7 @@ public class BreakBlock implements Listener {
 						for (OfflinePlayer op : kingdom.getMembers()) {
 							
 							if (op.isOnline()) {
-								op.getPlayer().sendMessage(ChatColor.RED+"Un bouclié a été détruit...");
+								op.getPlayer().sendMessage(Message.SHIELD_DESTROY);
 								op.getPlayer().playSound(op.getPlayer().getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 5, 1);
 							}
 							

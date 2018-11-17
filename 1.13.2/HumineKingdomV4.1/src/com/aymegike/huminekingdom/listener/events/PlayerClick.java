@@ -3,7 +3,6 @@ package com.aymegike.huminekingdom.listener.events;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -14,6 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.aymegike.huminekingdom.HumineKingdom;
+import com.aymegike.huminekingdom.utils.Message;
 import com.aymegike.huminekingdom.utils.models.Kingdom;
 import com.aymegike.huminekingdom.utils.models.ShieldGenerator;
 
@@ -29,16 +29,16 @@ public class PlayerClick implements Listener {
 			e.setCancelled(true);
 			if (e.getClickedBlock().getType() == Material.BEACON) {
 				if (HumineKingdom.getPlayerKingdom(e.getPlayer()).getShieldGenerator(e.getClickedBlock().getLocation()) != null){
-					e.getPlayer().sendMessage(ChatColor.GREEN+"Bien maintenant il va falloir lui donner un petit nom !");
+					e.getPlayer().sendMessage(Message.SHIELD_GIVE_NAME);
 					e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 1);
 					getShieldGenerator.put(e.getPlayer(), HumineKingdom.getPlayerKingdom(e.getPlayer()).getShieldGenerator(e.getClickedBlock().getLocation()));
 					PlayerChatEvent.getNameOfShematic.add(e.getPlayer());
 				} else {
-					e.getPlayer().sendMessage(ChatColor.RED+"C'est bien une balise mais elle n'est pas reconue en temps que generateur de bouclier...");
+					e.getPlayer().sendMessage(Message.SHIELD_NOT_REGISTER);
 					e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
 				}
 			} else {
-				e.getPlayer().sendMessage(ChatColor.RED+"Tu dois selectioner un generateur de bouclier...");
+				e.getPlayer().sendMessage(Message.SHIELD_IS_NOT_A_BEACON);
 				e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);
 			}
 			

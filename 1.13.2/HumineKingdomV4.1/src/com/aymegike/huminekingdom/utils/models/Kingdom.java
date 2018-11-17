@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 
 import com.aymegike.huminekingdom.HumineKingdom;
 import com.aymegike.huminekingdom.utils.MenuList;
+import com.aymegike.huminekingdom.utils.Message;
 import com.aymegike.huminekingdom.utils.Permissions;
 import com.aymegike.huminekingdom.utils.managers.FileManager;
 import com.aypi.Aypi;
@@ -217,7 +217,7 @@ public class Kingdom {
 		shieldGenerator.getLocation().getWorld().createExplosion(shieldGenerator.getLocation(), 4.0f);
 		for (OfflinePlayer pls : members) {
 			if (pls.isOnline()) {
-				pls.getPlayer().sendMessage(ChatColor.RED+"Un générateur de bouclier a été désactivé.");
+				pls.getPlayer().sendMessage(Message.SHIELD_DESACTIVATE);
 			}
 		}
 	}
@@ -228,7 +228,7 @@ public class Kingdom {
 		updateShield(shieldGenerator);
 		for (OfflinePlayer pls : members) {
 			if (pls.isOnline()) {
-				pls.getPlayer().sendMessage(ChatColor.GREEN+"Un g�n�rateur de bouclier a été réactivé.");
+				pls.getPlayer().sendMessage(Message.SHIELD_REACTIVATE);
 			}
 		}
 	}

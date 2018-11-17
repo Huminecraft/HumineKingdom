@@ -26,9 +26,8 @@ import org.bukkit.block.data.type.Stairs.Shape;
 import org.bukkit.entity.Player;
 
 import com.aymegike.huminekingdom.utils.BlockList;
+import com.aymegike.huminekingdom.utils.Message;
 import com.aypi.manager.FileManager;
-
-import net.md_5.bungee.api.ChatColor;
 
 public class Shematic {
 	
@@ -197,7 +196,7 @@ public class Shematic {
 	private void sendEndMessage() {
 		for (OfflinePlayer op : this.kingdom.getMembers()) {
 			if (op.isOnline()) {
-				op.getPlayer().sendMessage(ChatColor.GREEN+"Reconstruction terminée !");
+				op.getPlayer().sendMessage(Message.SHEMATIC_RECONSTRUCT_DONE);
 				op.getPlayer().playSound(op.getPlayer().getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 5, 1);
 			}
 		}
