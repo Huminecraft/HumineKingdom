@@ -14,17 +14,17 @@ public class Message {
 	final public static String PERMISSION = ChatColor.RED+"Désolé l'ami mais tu n'en as pas la permission. \n(Demande le l'aide a un adulte)";
 	final public static String PROBLEM = ChatColor.RED+"Il y a comme un problème";
 	
-	final public static String SHIELD_DESTROY = ChatColor.RED+"Un bouclié a été détruit...";
-	final public static String SHIELD_PLACE = ChatColor.BLUE+"Bravos a toi ! Tu viens de placer un générateur de bouclié. ";
+	final public static String SHIELD_DESTROY = ChatColor.RED+"Un bouclier a été détruit...";
+	final public static String SHIELD_PLACE = ChatColor.BLUE+"Bravo à toi ! Tu viens de placer un générateur de bouclier. ";
 	final public static String SHIELD_GIVE_NAME = ChatColor.GREEN+"Bien maintenant il va falloir lui donner un petit nom !";
-	final public static String SHIELD_NOT_REGISTER = ChatColor.RED+"C'est bien une balise mais elle n'est pas reconue en temps que generateur de bouclier...";
+	final public static String SHIELD_NOT_REGISTER = ChatColor.RED+"C'est bien une balise mais elle n'est pas reconnue en temps que generateur de bouclier...";
 	final public static String SHIELD_IS_NOT_A_BEACON = ChatColor.RED+"Tu dois selectioner un generateur de bouclier...";
 	final public static String SHIELD_DESACTIVATE = ChatColor.RED+"Un générateur de bouclier a été désactivé.";
 	final public static String SHIELD_REACTIVATE = ChatColor.GREEN+"Un générateur de bouclier a été réactivé.";
 	
 	final public static String KINGDOM_NAME_CANCEL(String name) {return ChatColor.RED+name+" est un nom super cool ! Du coup il est déja utilisé...";}
 	final public static String KINGDOM_VALIDE_CONSTRUCT = ChatColor.DARK_PURPLE+"Construction du futur empire en cours...";
-	final public static String KINGDOM_INVALIDE_NAME = ChatColor.RED+"Tu ne peut pas avoir d'espace dans le nom de ton royaume. Un peut de respect pour lui quoi...";
+	final public static String KINGDOM_INVALIDE_NAME = ChatColor.RED+"Tu ne peux pas avoir d'espace dans le nom de ton royaume. Un peu de respect pour lui quoi...";
 	final public static String KINGDOM_INVATION_NAME(String name) {return ChatColor.DARK_PURPLE+name+" a reçu l'invitation !";}
 	final public static String KINGDOM_INVATION_ARLY_INVITED(String name) {return ChatColor.DARK_PURPLE+"C'est bête mais "+name+" fait déja partie d'un royaume !";}
 	final public static String KINGDOM_INVITATION_NAME_DONT_CONNECT(String name) {return ChatColor.RED+name+" n'est pas connecté... Tu es sûr d'avoir bien écrit le nom de ton ami ?";}
@@ -42,9 +42,9 @@ public class Message {
 	final public static String GRADE_VALIDE_CONSTRUCT = ChatColor.DARK_PURPLE+"Construction du grade en cours...";
 	final public static String GRADE_INVALIDE_NAME = ChatColor.RED+"Tu ne peut pas avoir d'espace dans le nom de ton grade. Un peut de respect pour lui quoi...";
 	final public static String GRADE_CAN_CHANGE_BY_YOUR_SELF = ChatColor.RED+"Tu ne peux pas modifier ton propre grade.";
-	final public static String GRADE_UP(OfflinePlayer target, Grade grade) { return target.getName()+ChatColor.GREEN+" a était promus "+grade.getName(); }
+	final public static String GRADE_UP(OfflinePlayer target, Grade grade) { return target.getName()+ChatColor.GREEN+" a était promu "+grade.getName(); }
 	final public static String GRADE_UP_TARGET(Grade grade) { return ChatColor.GREEN+"Felicitation tu a était promus "+grade.getName()+" !"; }
-	final public static String GRADE_GIVE_NAME = ChatColor.DARK_PURPLE+"Tout d'abords il faut donner un nom a ce nouveau grade.";
+	final public static String GRADE_GIVE_NAME = ChatColor.DARK_PURPLE+"Tout d'abords il faut donner un nom à ce nouveau grade.";
 	final public static String GRADE_AUTO_DELET = ChatColor.RED+"Désolé l'ami mais tu ne peux pas modifier ton propre grade.";
 	final public static String GRADE_DELET(Grade grade) { return ChatColor.RED+"Le grade "+ChatColor.WHITE+grade.getName()+ChatColor.RED+" a était supprimé"; }
 	
@@ -52,7 +52,7 @@ public class Message {
 	final public static String SHEMATIC_VALIDE_CONSTRUCT = ChatColor.DARK_PURPLE+"Construction du plans en cours...";
 	final public static String SHEMATIC_INVALIDE_NAME = ChatColor.RED+"Tu ne peut pas avoir d'espace dans le nom de ton plans. Un peut de respect pour lui quoi...";
 	final public static String SHEMATIC_RECONSTRUCT_DONE = ChatColor.GREEN+"Reconstruction terminée !";
-	final public static String SHEMATIC_CREATE = ChatColor.GREEN+"Besoin d'un nouveau plans de construction ? Clique sur un de tes generateurs de boucliers !";
+	final public static String SHEMATIC_CREATE = ChatColor.GREEN+"Besoin d'un nouveau plans de construction ? Clique sur un de tes generateurs de boucliers ! "+ChatColor.ITALIC+"(Balise)";
 	final public static String SHEMATIC_DELET(Shematic shematic) { return ChatColor.RED+"Tu a supprimé "+shematic.getName(); }
 	final public static String SHEMATIC_SCAN = ChatColor.GREEN+"Scanne de la zone en cours...";
 	final public static String SHEMATIC_SCAN_FINISH = ChatColor.GREEN+"Scanne terminé.";

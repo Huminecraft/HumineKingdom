@@ -1279,7 +1279,7 @@ public class MenuList {
 		lore.add(ChatColor.DARK_PURPLE+"bloques: "+ChatColor.WHITE+ChatColor.ITALIC+new FileManager(shemtatic.getFile()).getTextFile().size());
 		lore.add(ChatColor.GOLD+"~~~~~~~~~~~~~~~~~~~");
 		lore.add("");
-		lore.add(ChatColor.GREEN+"Clique pour refaire un nouveau \nscanne de la zone.");
+		lore.add(ChatColor.GREEN+"Clique pour refaire un nouveau scanne de la zone.");
 		
 		ItemStack membre = new ItemStack(Material.PAPER);
 		ItemMeta membrem = membre.getItemMeta();

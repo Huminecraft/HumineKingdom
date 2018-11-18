@@ -40,6 +40,8 @@ public class Shematic {
 	private int task;
 	private int index = 0;	
 	
+	private boolean isRebuild = false;
+	
 	public Shematic(Kingdom kingdom, String name, ShieldGenerator sg) {
 		
 		this.name = name;
@@ -52,7 +54,7 @@ public class Shematic {
 			ArrayList<String> print = new ArrayList<String>();
 			
 			for (Location loc : sg.getZone().getSquare().getScareLoc()) {
-				if (!BlockList.getBlackList(loc.getBlock().getType())) {
+				if (!BlockList.isInBlackList(loc.getBlock().getType())) {
 					print.add(getLineToPrint(loc));
 				}
 			}
@@ -64,125 +66,127 @@ public class Shematic {
 	}
 	
 	public void rebuild() {
-		
-		ArrayList<String> str = new FileManager(file).getTextFile();
-		
-		task = Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("HumineKingdom"), new Runnable() {
+		if (!isRebuild) {
+			isRebuild = true;
+			ArrayList<String> str = new FileManager(file).getTextFile();
 			
-			@Override
-			public void run() {
+			task = Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("HumineKingdom"), new Runnable() {
 				
-				if (index >= str.size()) {
-					Bukkit.getScheduler().cancelTask(task);
-					index = 0;
-					sendEndMessage();
-					return;
-				}
-				
-				String[] line = str.get(index).split(" ");
-				
-				while (new Location(Bukkit.getWorld(line[0]), Integer.parseInt(line[1]), Integer.parseInt(line[2]), Integer.parseInt(line[3])).getBlock().getType() == Material.matchMaterial(line[4])) {
-					index++;
+				@Override
+				public void run() {
+					
 					if (index >= str.size()) {
 						Bukkit.getScheduler().cancelTask(task);
 						index = 0;
+						isRebuild = false;
 						sendEndMessage();
 						return;
 					}
-					line = str.get(index).split(" ");
-				}
-				if (BlockList.getWhitList(new Location(Bukkit.getWorld(line[0]), Integer.parseInt(line[1]), Integer.parseInt(line[2]), Integer.parseInt(line[3])).getBlock().getType())) {
 					
-					new Location(Bukkit.getWorld(line[0]), Integer.parseInt(line[1]), Integer.parseInt(line[2]), Integer.parseInt(line[3])).getBlock().setType(Material.matchMaterial(line[4]));
+					String[] line = str.get(index).split(" ");
 					
-					
-					//SET ++
-					Block block = new Location(Bukkit.getWorld(line[0]), Integer.parseInt(line[1]), Integer.parseInt(line[2]), Integer.parseInt(line[3])).getBlock();
-					Random r = new Random();
-					boolean anvil = r.nextInt(100) == 0;
-					boolean piston = r.nextInt(100) == 1;
-					for (Player pls : Bukkit.getOnlinePlayers()) {
-						pls.playSound(block.getLocation(), Sound.BLOCK_STONE_PLACE, 5, 1);
+					while (new Location(Bukkit.getWorld(line[0]), Integer.parseInt(line[1]), Integer.parseInt(line[2]), Integer.parseInt(line[3])).getBlock().getType() == Material.matchMaterial(line[4])) {
+						index++;
+						if (index >= str.size()) {
+							Bukkit.getScheduler().cancelTask(task);
+							index = 0;
+							sendEndMessage();
+							return;
+						}
+						line = str.get(index).split(" ");
+					}
+					if (BlockList.isInWhitList(new Location(Bukkit.getWorld(line[0]), Integer.parseInt(line[1]), Integer.parseInt(line[2]), Integer.parseInt(line[3])).getBlock().getType())) {
 						
-						if (anvil) {
-							pls.playSound(block.getLocation(), Sound.BLOCK_ANVIL_USE, 5, 1);
+						new Location(Bukkit.getWorld(line[0]), Integer.parseInt(line[1]), Integer.parseInt(line[2]), Integer.parseInt(line[3])).getBlock().setType(Material.matchMaterial(line[4]));
+						
+						
+						//SET ++
+						Block block = new Location(Bukkit.getWorld(line[0]), Integer.parseInt(line[1]), Integer.parseInt(line[2]), Integer.parseInt(line[3])).getBlock();
+						Random r = new Random();
+						boolean anvil = r.nextInt(100) == 0;
+						boolean piston = r.nextInt(100) == 1;
+						for (Player pls : Bukkit.getOnlinePlayers()) {
+							pls.playSound(block.getLocation(), Sound.BLOCK_STONE_PLACE, 5, 1);
+							
+							if (anvil) {
+								pls.playSound(block.getLocation(), Sound.BLOCK_ANVIL_USE, 5, 1);
+							}
+							
+							if (piston) {
+								pls.playSound(block.getLocation(), Sound.BLOCK_PISTON_EXTEND, 5, 1);
+							}
 						}
 						
-						if (piston) {
-							pls.playSound(block.getLocation(), Sound.BLOCK_PISTON_EXTEND, 5, 1);
+						if (block.getBlockData() instanceof Directional ) { //CLASSIQUE
+							
+							Directional dir = (Directional) block.getBlockData();
+							
+							dir.setFacing(BlockFace.valueOf(line[5]));
+							
+							block.setBlockData(dir);
+							
 						}
+						
+						if (block.getBlockData() instanceof Slab) {
+							Slab s = (Slab) block.getBlockData();
+							
+							s.setType(Type.valueOf(line[5]));
+							
+							block.setBlockData(s);
+						}
+						
+						if (block.getBlockData() instanceof Stairs) { //STAIRS
+							
+							Stairs s = (Stairs) block.getBlockData();
+							
+							s.setHalf(Half.valueOf(line[6]));
+							s.setShape(Shape.valueOf(line[7]));
+							
+							block.setBlockData(s);
+							
+						} 
+						
+						if (block.getBlockData() instanceof Repeater) {
+							
+							Repeater rp = (Repeater) block.getBlockData();
+							
+							rp.setDelay(Integer.parseInt(line[6]));
+							
+							block.setBlockData(rp);
+							
+						}
+						
+						if (block.getBlockData() instanceof Comparator) {
+							
+							Comparator c = (Comparator) block.getBlockData();
+							
+							c.setMode(Mode.valueOf(line[6]));
+							
+							block.setBlockData(c);
+						}
+						
+						if (block.getBlockData() instanceof Leaves) {
+							Leaves l = (Leaves) block.getBlockData();
+							l.setPersistent(true);
+							block.setBlockData(l);
+						}
+						
+						if (block.getBlockData() instanceof Rail) {
+							Rail r1 = (Rail) block.getBlockData();
+							r1.setShape(Rail.Shape.valueOf(line[6]));
+							
+							block.setBlockData(r1);
+						}
+						
+						
 					}
+						
 					
-					if (block.getBlockData() instanceof Directional ) { //CLASSIQUE
-						
-						Directional dir = (Directional) block.getBlockData();
-						
-						dir.setFacing(BlockFace.valueOf(line[5]));
-						
-						block.setBlockData(dir);
-						
-					}
-					
-					if (block.getBlockData() instanceof Slab) {
-						Slab s = (Slab) block.getBlockData();
-						
-						s.setType(Type.valueOf(line[5]));
-						
-						block.setBlockData(s);
-					}
-					
-					if (block.getBlockData() instanceof Stairs) { //STAIRS
-						
-						Stairs s = (Stairs) block.getBlockData();
-						
-						s.setHalf(Half.valueOf(line[6]));
-						s.setShape(Shape.valueOf(line[7]));
-						
-						block.setBlockData(s);
-						
-					} 
-					
-					if (block.getBlockData() instanceof Repeater) {
-						
-						Repeater rp = (Repeater) block.getBlockData();
-						
-						rp.setDelay(Integer.parseInt(line[6]));
-						
-						block.setBlockData(rp);
-						
-					}
-					
-					if (block.getBlockData() instanceof Comparator) {
-						
-						Comparator c = (Comparator) block.getBlockData();
-						
-						c.setMode(Mode.valueOf(line[6]));
-						
-						block.setBlockData(c);
-					}
-					
-					if (block.getBlockData() instanceof Leaves) {
-						Leaves l = (Leaves) block.getBlockData();
-						l.setPersistent(true);
-						block.setBlockData(l);
-					}
-					
-					if (block.getBlockData() instanceof Rail) {
-						Rail r1 = (Rail) block.getBlockData();
-						r1.setShape(Rail.Shape.valueOf(line[6]));
-						
-						block.setBlockData(r1);
-					}
-					
+					index++;
 					
 				}
-					
-				
-				index++;
-				
-			}
-		}, 1, 1);
-		
+			}, 1, 1);
+		}
 	}
 	
 	public String getName() {
@@ -204,7 +208,19 @@ public class Shematic {
 	
 	private String getLineToPrint(Location loc) {
 		
-		String lineToPrint = loc.getWorld().getName()+" "+loc.getBlockX()+" "+loc.getBlockY()+" "+loc.getBlockZ()+" "+loc.getBlock().getType().name();
+		String type = loc.getBlock().getType().name();
+		if (loc.getBlock().getType() == Material.COAL_ORE
+		|| loc.getBlock().getType() == Material.DIAMOND_ORE
+		|| loc.getBlock().getType() == Material.EMERALD_ORE
+		|| loc.getBlock().getType() == Material.REDSTONE_ORE
+		|| loc.getBlock().getType() == Material.GOLD_ORE
+		|| loc.getBlock().getType() == Material.IRON_ORE
+		|| loc.getBlock().getType() == Material.LAPIS_ORE
+		|| loc.getBlock().getType() == Material.NETHER_QUARTZ_ORE) {
+			type = Material.STONE.name();
+		}
+		
+		String lineToPrint = loc.getWorld().getName()+" "+loc.getBlockX()+" "+loc.getBlockY()+" "+loc.getBlockZ()+" "+type;
 		
 		if (loc.getBlock().getBlockData() instanceof Directional ) { //DIRECTIONALS
 			
@@ -260,7 +276,6 @@ public class Shematic {
 		return lineToPrint;
 		
 	}
-	
 	public Kingdom getkingdom() {
 		return this.kingdom;
 	}
@@ -270,7 +285,7 @@ public class Shematic {
 		ArrayList<String> print = new ArrayList<String>();
 		
 		for (Location loc : sg.getZone().getSquare().getScareLoc()) {
-			if (!BlockList.getBlackList(loc.getBlock().getType())) {
+			if (!BlockList.isInBlackList(loc.getBlock().getType())) {
 				print.add(getLineToPrint(loc));
 			}
 		}

@@ -17,6 +17,7 @@ import org.bukkit.util.Vector;
 import com.aymegike.huminekingdom.HumineKingdom;
 import com.aypi.utils.Timer;
 import com.aypi.utils.inter.TimerFinishListener;
+import com.aypi.utils.particle.ExternalWaveParticle;
 
 public class Egg {
 	
@@ -28,7 +29,6 @@ public class Egg {
 	private int task;
 	private int task2;
 	private int task3;
-	private int task4;
 	
 	private int timer = 20;
 	
@@ -59,35 +59,6 @@ public class Egg {
 	public void destroyEgg() {
 		replaceBlocks();
 		Bukkit.getScheduler().cancelTask(task3);
-	}
-	
-	private void radialParticle(Particle particle, double h) {
-		
-		task4 = Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("HumineKingdom"), new Runnable() {
-			
-			double t = 0;
-			Location loc = new Location(location.getWorld(), location.getX()+0.5, location.getY()+h, location.getZ()+0.5);
-			
-			@Override
-			public void run() {
-				
-				t += 0.1*Math.PI;
-				for (double theta = 0 ; theta <= 2*Math.PI ; theta += Math.PI/32) {
-					double x = t*Math.cos(theta);
-					double y = Math.exp(-0.1*t) * Math.sin(t) + 1.5;
-					double z = t*Math.sin(theta);
-					loc.add(x, y, z);
-					spawnParticle(particle, loc, 0, 0, 0, 0);
-					loc.subtract(x, y, z);
-				}
-				
-				if (t > 20) {
-					Bukkit.getScheduler().cancelTask(task4);
-				}
-				
-			}
-		}, 1, 1);
-		
 	}
 	
 	private void particleEgg() {
@@ -196,8 +167,8 @@ public class Egg {
 
 						@Override
 						public void execute() {
-							radialParticle(Particle.FIREWORKS_SPARK, 0);
-							radialParticle(Particle.FLAME, 0.2);
+							new ExternalWaveParticle(Particle.FIREWORKS_SPARK, location, 50, 0).play();
+							new ExternalWaveParticle(Particle.FLAME, location, 20, 0.2).play();
 							playSound(Sound.ENTITY_ENDER_DRAGON_HURT, loc);
 							for (Entity e : location.getWorld().getNearbyEntities(loc, 5, 5, 5)) {
 								e.setVelocity(new Vector(e.getLocation().getX() - location.getX(), e.getLocation().getY() - (location.getY()-1), e.getLocation().getZ() - location.getZ()).multiply(0.2));

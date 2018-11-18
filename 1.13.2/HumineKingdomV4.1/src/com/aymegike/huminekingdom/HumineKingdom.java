@@ -1,18 +1,24 @@
 package com.aymegike.huminekingdom;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
 import com.aymegike.huminekingdom.listener.CommandManager;
+import com.aymegike.huminekingdom.utils.BlockList;
 import com.aymegike.huminekingdom.utils.MenuList;
 import com.aymegike.huminekingdom.utils.Permissions;
 import com.aymegike.huminekingdom.utils.managers.EggManager;
@@ -28,8 +34,8 @@ public class HumineKingdom extends JavaPlugin {
 	/*
 	 * Le plugin a besoin des imports:
 	 *  
-	 * Spigot 1.13.1 
-	 * AYPI.V1.3
+	 * Spigot 1.13.2 
+	 * AYPI.V1.4.2
 	 *  
 	 */
 	
@@ -121,6 +127,7 @@ public class HumineKingdom extends JavaPlugin {
 		return new ZoneListener() {
 
 			private void cancel(Player player, Event e) {
+				
 				player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 5, 1);
 			}
 			
@@ -131,18 +138,25 @@ public class HumineKingdom extends JavaPlugin {
 
 			@Override
 			public void onPlayerTryToPlaceBlock(Player player, Block block, BlockPlaceEvent e) {
+				
 				if (player.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)) {
 					
 					if (HumineKingdom.getPlayerKingdom(player) != null && HumineKingdom.getPlayerKingdom(player) == kingdom) {
 						if (HumineKingdom.getPlayerGrade(player) != null && HumineKingdom.getPlayerGrade(player).containPermission(Permissions.BUILD.getPermission())) {
 							accept(player, e);
 						} else {
-							e.setCancelled(true);
-							cancel(player, e);
+							if (!BlockList.isInZoneList(e.getBlock().getType()) && e.getPlayer().getGameMode() != GameMode.CREATIVE) {
+								e.setCancelled(true);
+								e.getBlock().getWorld().spawnParticle(Particle.SMOKE_NORMAL, e.getBlock().getLocation(), 1);
+								cancel(player, e);
+							}
 						}
 					} else {
-						e.setCancelled(true);
-						cancel(player, e);
+						if (!BlockList.isInZoneList(e.getBlock().getType()) && e.getPlayer().getGameMode() != GameMode.CREATIVE) {
+							e.setCancelled(true);
+							e.getBlock().getWorld().spawnParticle(Particle.SMOKE_NORMAL, e.getBlock().getLocation(), 1);
+							cancel(player, e);
+						}
 					}
 					
 				}
@@ -157,15 +171,51 @@ public class HumineKingdom extends JavaPlugin {
 						if (HumineKingdom.getPlayerGrade(player) != null && HumineKingdom.getPlayerGrade(player).containPermission(Permissions.BREAK.getPermission())) {
 							accept(player, e);
 						} else {
-							e.setCancelled(true);
-							cancel(player, e);
+							if (!BlockList.isInZoneList(e.getBlock().getType()) && e.getPlayer().getGameMode() != GameMode.CREATIVE) {
+								e.setCancelled(true);
+								e.getBlock().getWorld().spawnParticle(Particle.SMOKE_NORMAL, e.getBlock().getLocation(), 1);
+								cancel(player, e);
+							}
 						}
 					} else {
-						e.setCancelled(true);
-						cancel(player, e);
+						if (!BlockList.isInZoneList(e.getBlock().getType()) && e.getPlayer().getGameMode() != GameMode.CREATIVE) {
+							e.setCancelled(true);
+							e.getBlock().getWorld().spawnParticle(Particle.SMOKE_NORMAL, e.getBlock().getLocation(), 1);
+							cancel(player, e);
+						}
 					}
 					
 				}
+			}
+
+			@Override
+			public void onPlayerTryToInteractEvent(Player player, PlayerInteractEvent e) {
+				if (player.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)) {
+					
+					if (HumineKingdom.getPlayerKingdom(player) != null && HumineKingdom.getPlayerKingdom(player) == kingdom) {
+						if (HumineKingdom.getPlayerGrade(player) != null && HumineKingdom.getPlayerGrade(player).containPermission(Permissions.BREAK.getPermission())) {
+							accept(player, e);
+						} else {
+							if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+								if (e.getClickedBlock().getType() == Material.BEACON) {
+									e.setCancelled(true);
+									e.getClickedBlock().getWorld().spawnParticle(Particle.SMOKE_NORMAL, e.getClickedBlock().getLocation(), 1);
+								}
+							}
+						}
+					} else {
+						
+						if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+							if (e.getClickedBlock().getType() == Material.BEACON) {
+								e.setCancelled(true);
+								e.getClickedBlock().getWorld().spawnParticle(Particle.SMOKE_NORMAL, e.getClickedBlock().getLocation(), 1);
+							}
+						}
+			
+					}
+					
+				}
+
 			}
 
 		};

@@ -299,6 +299,17 @@ public class Kingdom {
 		return null;
 	}
 	
+	public boolean isMember(OfflinePlayer op) {
+		
+		for (OfflinePlayer l : members) {
+			if (l.getName().equalsIgnoreCase(op.getName())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public String getName() {
 		return name;
 	}

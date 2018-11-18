@@ -34,6 +34,12 @@ public class PlaceBlock implements Listener {
 				Kingdom k = HumineKingdom.getPlayerKingdom(player);
 				Square square = new Square(new Location(e.getBlock().getLocation().getWorld(), e.getBlock().getLocation().getBlockX()-60, 0, e.getBlock().getLocation().getBlockZ()-60), new Location(e.getBlock().getLocation().getWorld(), e.getBlock().getLocation().getBlockX()+60, 300, e.getBlock().getLocation().getBlockZ()+60));
 				
+				for (ShieldGenerator sg : k.getShieldGenerators()) {
+					if (sg.getZone().containLocation(e.getBlock().getLocation())) {
+						return;
+					}
+				}
+				
 				k.addShield(new ShieldGenerator(k, e.getBlock().getLocation(), new Zone(square , HumineKingdom.getZoneListener(k)), true));
 				player.sendMessage(Message.SHIELD_PLACE);
 				
