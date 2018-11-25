@@ -20,10 +20,10 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
 
-import com.aymegike.huminekingdom.listener.CommandManager;
 import com.aymegike.huminekingdom.utils.BlockList;
 import com.aymegike.huminekingdom.utils.MenuList;
 import com.aymegike.huminekingdom.utils.Permissions;
+import com.aymegike.huminekingdom.utils.managers.CommandManager;
 import com.aymegike.huminekingdom.utils.managers.EggManager;
 import com.aymegike.huminekingdom.utils.managers.FileManager;
 import com.aymegike.huminekingdom.utils.managers.GloryManager;
@@ -52,7 +52,7 @@ public class HumineKingdom extends JavaPlugin {
 		System.out.println("-------------------------------------------");
 		System.out.println("[HumineKingdom] EWOK PRODUCTION !");
 		System.out.println("-------------------------------------------");
-		new com.aymegike.huminekingdom.listener.EventManager(this);
+		new com.aymegike.huminekingdom.utils.managers.EventManager(this);
 		new FileManager();
 		kManager = new KingdomManager();
 		new CommandManager(this);

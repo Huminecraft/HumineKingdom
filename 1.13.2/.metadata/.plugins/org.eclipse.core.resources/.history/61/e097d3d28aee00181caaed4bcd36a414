@@ -1,0 +1,5 @@
+package com.aymegike.huminekingdom.listener.events;
+
+public class TeleportEvent {
+
+}

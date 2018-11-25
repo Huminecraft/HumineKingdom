@@ -1,10 +1,7 @@
 package com.aymegike.huminekingdom.listener.events;
 
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Particle.DustOptions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,6 +22,22 @@ public class PlaceBlock implements Listener {
 	public void onPlayerPlaceBlock(BlockPlaceEvent e) {
 		Player player = e.getPlayer();
 		
+		if (e.getBlock().getType() == Material.DRAGON_EGG) {
+			
+			if (HumineKingdom.getPlayerKingdom(player) != null) {
+				
+				e.setCancelled(true);
+				for (int i = 0 ; i <= player.getInventory().getSize() ; i++) {
+					if (player.getInventory().getItem(i) != null && player.getInventory().getItem(i).getType() == Material.DRAGON_EGG) {
+						player.getInventory().setItem(i, null);
+					}
+				}
+				HumineKingdom.getEggManager().setUpEgg(HumineKingdom.getPlayerKingdom(player), e.getBlock().getLocation());
+			
+			}
+			
+		}
+		
 		for (Kingdom kigdom : HumineKingdom.getKingdomManager().getKingdomList()) {
 			for (ShieldGenerator sg : kigdom.getShieldGenerators()) {
 
@@ -33,8 +46,6 @@ public class PlaceBlock implements Listener {
 				&& sg.getLocation().getBlockY() <= e.getBlock().getLocation().getBlockY()) {
 					if (BlockList.isInTopBeaconList(e.getBlock().getType())) {
 						e.setCancelled(true);
-						DustOptions dustOptions = new DustOptions(Color.BLACK, (float) 10.0);
-						e.getBlock().getLocation().getWorld().spawnParticle(Particle.REDSTONE, e.getBlock().getLocation().add(0.5, 0.5, 0.5), 10, 0, 0.5, 0, 2, dustOptions);
 						return;
 					}
 					
@@ -72,25 +83,7 @@ public class PlaceBlock implements Listener {
 			
 		}
 		
-		if (e.getBlock().getType() == Material.DRAGON_EGG) {
-			
-			if (HumineKingdom.getPlayerKingdom(player) != null) {
-				
-				e.setCancelled(true);
-				for (int i = 0 ; i <= player.getInventory().getSize() ; i++) {
-					if (player.getInventory().getItem(i) != null && player.getInventory().getItem(i).getType() == Material.DRAGON_EGG) {
-						player.getInventory().setItem(i, null);
-					}
-				}
-				HumineKingdom.getEggManager().setUpEgg(HumineKingdom.getPlayerKingdom(player), e.getBlock().getLocation());
-			
-			} else {
-				
-				// TODO
-				
-			}
-			
-		}
+		e.setCancelled(BreakBlock.containEgg(e.getBlock().getLocation()));
 	}
 
 }

@@ -40,7 +40,7 @@ public class EggManager {
 	
 	public void setUpEgg(Kingdom kingdom, Location loc) {
 		this.kingdom = kingdom;
-		this.loc = loc;
+		this.loc = new Location(loc.getWorld(), loc.getBlockX(), loc.getY(), loc.getBlockZ());
 		fm.clearFile();
 		fm.printLine("kingdom: "+kingdom.getName());
 		fm.printLine("location: "+loc.getWorld().getName()+" "+loc.getBlockX()+" "+loc.getBlockY()+" "+loc.getBlockZ());
@@ -63,6 +63,8 @@ public class EggManager {
 		return egg;
 	}
 	
-	
+	public void removeEgg() {
+		this.egg = null;
+	}
 
 }

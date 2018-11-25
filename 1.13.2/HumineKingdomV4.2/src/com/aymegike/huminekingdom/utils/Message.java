@@ -57,4 +57,8 @@ public class Message {
 	final public static String SHEMATIC_DELET(Shematic shematic) { return ChatColor.RED+"Tu a supprimé "+shematic.getName(); }
 	final public static String SHEMATIC_SCAN = ChatColor.GREEN+"Scanne de la zone en cours...";
 	final public static String SHEMATIC_SCAN_FINISH = ChatColor.GREEN+"Scanne terminé.";
+	
+	final public static String EGG_HAND_IS_FULL = ChatColor.BLACK+"["+ChatColor.WHITE+"oeuf"+ChatColor.BLACK+"] "+ChatColor.DARK_PURPLE+"Vous ne pouvez pas me récupérer les mains pleines.";
+	public static final String EGG_NO_KINGDOM = ChatColor.DARK_PURPLE+"Attention l'ami ! Evite de griller les étapes... Avant de voler l'oeuf il va falloir créer un royaume qui se vera emplie de gloire. Fait: "+ChatColor.WHITE+""+ChatColor.ITALIC+"/kingdom"+ChatColor.RESET+ChatColor.DARK_PURPLE+" pour en créer un !";
+	final public static String EGG_NEW_KINGDOM(OfflinePlayer offlinePlayer) { return ChatColor.DARK_PURPLE+"L'oeuf de dragon a trouvé de nouveaux maitres ! Gloire a "+ChatColor.WHITE+HumineKingdom.getPlayerKingdom(offlinePlayer).getName()+ChatColor.DARK_PURPLE+" !"; }
 }

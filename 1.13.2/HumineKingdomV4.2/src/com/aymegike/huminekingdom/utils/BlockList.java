@@ -41,6 +41,22 @@ public class BlockList {
 		Material.ENCHANTING_TABLE
 	};
 	
+	private static Material[] structEgg= {
+			Material.GLOWSTONE,
+			Material.QUARTZ_STAIRS,
+			Material.COBBLESTONE_WALL,
+			Material.END_ROD
+	};
+	
+	public static boolean isInStructEgg(Material m) {
+		for (Material material : structEgg) {
+			if (material == m) {
+				return true;
+			}
+		}
+		return false;
+	}
+			
 	public static boolean isInTopBeaconList(Material m) {
 		for (Material material : topBeaconList) {
 			if (material == m) {
