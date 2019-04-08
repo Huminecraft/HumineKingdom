@@ -389,7 +389,6 @@ public class Kingdom {
 	public ShieldGenerator getShieldGenerator(Location loc) {
 		
 		for (ShieldGenerator sg : shieldGenerators) {
-			System.out.println(sg.getLocation().getWorld().getName().equalsIgnoreCase(loc.getWorld().getName()) +" "+ sg.getLocation().getBlockX() +" "+ loc.getBlockX() +" "+ sg.getLocation().getBlockY() +" "+ loc.getBlockY() +" "+ sg.getLocation().getBlockZ() +" "+ loc.getBlockZ());
 			if (sg.getLocation().getWorld().getName().equalsIgnoreCase(loc.getWorld().getName()) && sg.getLocation().getBlockX() == loc.getBlockX() && sg.getLocation().getBlockY() == loc.getBlockY() && sg.getLocation().getBlockZ() == loc.getBlockZ()) {
 				return sg;
 			}
