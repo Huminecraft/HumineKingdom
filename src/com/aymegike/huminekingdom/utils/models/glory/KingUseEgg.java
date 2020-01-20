@@ -18,11 +18,10 @@ public class KingUseEgg extends GloryEvent {
 		super(event);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onPlayerBeGlorious(Player player, Event event) {
 		
-		Kingdom kingdom = HumineKingdom.getPlayerKingdom(player);
+		Kingdom kingdom = HumineKingdom.getKingdomManager().getPlayerKingdom(player);
 		
 		PlayerInteractEvent e = (PlayerInteractEvent) event;
 		
@@ -33,7 +32,7 @@ public class KingUseEgg extends GloryEvent {
 		
 		if (kingdom.getLastUpdate().getMonth() != new Date().getMonth() || kingdom.getLastUpdate().getDate() != new Date().getDate()) {
 			kingdom.updateDate();
-			kingdom.setGlory(kingdom.getGlory() + 30);
+			kingdom.addGlory(30);
 			player.sendMessage(Message.EGG_UPDATE_DATE);
 		}
 		

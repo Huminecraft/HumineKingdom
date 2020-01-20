@@ -13,11 +13,16 @@ import com.aymegike.huminekingdom.utils.models.Kingdom;
 public class ExplosionBlock implements Listener {
 	
 	@EventHandler
-	public void onBlockExplos(EntityExplodeEvent  e) {
-		for (Block bloc : e.blockList()) {
-			if (bloc.getType() == Material.BEACON) {
-				for (Kingdom kingdom : HumineKingdom.getKingdomManager().getKingdomList()) {
-					for (int i = 0 ; i < kingdom.getShieldGenerators().size() ; i++) {
+	public void onBlockExplos(EntityExplodeEvent  e)
+	{
+		for (Block bloc : e.blockList())
+		{
+			if (bloc.getType() == Material.BEACON)
+			{
+				for (Kingdom kingdom : HumineKingdom.getKingdomManager().getKingdomList())
+				{
+					for (int i = 0 ; i < kingdom.getShieldGenerators().size() ; i++)
+					{
 						if (kingdom.getShieldGenerators().get(i).getLocation().getWorld() == bloc.getLocation().getWorld() && kingdom.getShieldGenerators().get(i).getLocation().getBlockX() == bloc.getLocation().getBlockX()
 						&& kingdom.getShieldGenerators().get(i).getLocation().getBlockY() == bloc.getLocation().getBlockY() && kingdom.getShieldGenerators().get(i).getLocation().getBlockZ() == bloc.getLocation().getBlockZ()) {
 							kingdom.breakShield(kingdom.getShieldGenerators().get(i));

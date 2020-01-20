@@ -1,6 +1,6 @@
 name: HumineKingdom
 version: 4.2
-api-version: 1.13
+api-version: 1.15
 author: Aymegike
 main: com.aymegike.huminekingdom.HumineKingdom
 depend: [Aypi]

@@ -19,7 +19,7 @@ public class PlaceBeacon extends GloryEvent {
 	@Override
 	public void onPlayerBeGlorious(Player player, Event event) {
 		
-		Kingdom kingdom = HumineKingdom.getPlayerKingdom(player);
+		Kingdom kingdom = HumineKingdom.getKingdomManager().getPlayerKingdom(player);
 		
 		if (kingdom == null)
 			return;
@@ -28,7 +28,7 @@ public class PlaceBeacon extends GloryEvent {
 		
 		if (e.getBlock().getType() == Material.BEACON) {
 			kingdom.sendMessageToMembers(Message.PLACE_BEACON(player));
-			kingdom.setGlory(kingdom.getGlory() + 100);
+			kingdom.addGlory(300);
 		}
 		
 	}

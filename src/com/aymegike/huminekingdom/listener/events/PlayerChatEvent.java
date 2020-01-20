@@ -22,20 +22,23 @@ public class PlayerChatEvent implements Listener {
 	
 	public static ArrayList<OfflinePlayer> getNameOfKingdom = new ArrayList<OfflinePlayer>();
 	public static ArrayList<OfflinePlayer> getNameOfPlayer = new ArrayList<OfflinePlayer>();
+	public static ArrayList<OfflinePlayer> getNameOfTraitor = new ArrayList<OfflinePlayer>();
 	public static ArrayList<OfflinePlayer> getNameOfGrade = new ArrayList<OfflinePlayer>();
 	public static ArrayList<OfflinePlayer> getNameOfShematic = new ArrayList<OfflinePlayer>();
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
-	public void onPlayerUseChat(org.bukkit.event.player.PlayerChatEvent e) {
-		
+	public void onPlayerUseChat(org.bukkit.event.player.PlayerChatEvent e)
+	{		
 		Player player = e.getPlayer();
-		if (getNameOfKingdom.contains(player)) {
+		if (getNameOfKingdom.contains(player))
+		{
 			e.setCancelled(true);
 			String msg = e.getMessage();
 			String[] getSpace = msg.split(" ");
-			if(getSpace.length == 1){
-				if(HumineKingdom.getKingdom(msg) != null){
+			if(getSpace.length == 1)
+			{
+				if(HumineKingdom.getKingdom(msg) != null)
+				{
 					player.sendMessage(Message.KINGDOM_NAME_CANCEL(msg));
 					player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 					getNameOfKingdom.remove(player);
@@ -46,45 +49,107 @@ public class PlayerChatEvent implements Listener {
 				new Kingdom(msg, player, "Roi");
 				MenuList.mainKingdomMenu(player).openMenu();
 				
-			}else{				
+			}
+			else
+			{				
 				player.sendMessage(Message.KINGDOM_INVALIDE_NAME);
-				player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
-			
+				player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);			
 			}
 			
 			getNameOfKingdom.remove(player);	
 		}
-		else if(getNameOfPlayer.contains(player)) {
+		else if(getNameOfPlayer.contains(player))
+		{
 			e.setCancelled(true);
 			String msg = e.getMessage();
-			if(HumineKingdom.getPlayerKingdom(player) != null){
-				if(Bukkit.getPlayer(msg) != null){
-					if(HumineKingdom.getPlayerKingdom(Bukkit.getOfflinePlayer(msg)) == null){
+			Kingdom playerKingdom = HumineKingdom.getKingdomManager().getPlayerKingdom(player);
+			if(playerKingdom != null)
+			{
+				Player invitedPlayer = Bukkit.getPlayer(msg);
+				if(invitedPlayer != null)
+				{
+					if(HumineKingdom.getKingdomManager().getPlayerKingdom(invitedPlayer) == null)
+					{
 						player.sendMessage(Message.KINGDOM_INVATION_NAME(msg));
 						player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 5, 1);
-						MenuList.invitationMenu(player, Bukkit.getPlayer(msg)).openMenu();;
-					}else{
+						MenuList.invitationMenu(player, invitedPlayer).openMenu();
+						invitedPlayer.playSound(invitedPlayer.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 5, 1);
+					}
+					else
+					{
 						player.sendMessage(Message.KINGDOM_INVATION_ARLY_INVITED(msg));
 						player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 					}
-					
-				}else{
-					
+				}
+				else
+				{					
 					player.sendMessage(Message.KINGDOM_INVITATION_NAME_DONT_CONNECT(msg));
-					player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
-				
+					player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);				
 				}
 			}
 			
 			MenuList.membersMenu(player).openMenu();
 			getNameOfPlayer.remove(player);
-		}
-		else if (getNameOfGrade.contains(player)) {
+		}		
+		else if(getNameOfTraitor.contains(player))
+		{
+			e.setCancelled(true);
+			String msg = e.getMessage();
+			Kingdom playerKingdom = HumineKingdom.getKingdomManager().getPlayerKingdom(player);
+			if(playerKingdom != null)
+			{
+				Player traitor = Bukkit.getPlayer(msg);
+				if(traitor != null)
+				{
+					if (traitor.getUniqueId() == player.getUniqueId())
+					{
+						player.sendMessage("Mais.. Ne te déclare pas comme un traître voyons. Sois un peu plus discret.");
+						player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);		
+					}
+					else if (playerKingdom.isTraitor(traitor))
+					{
+						player.sendMessage("Ce traître a déjà été ajouté.");
+						player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);							
+					}
+					else if (playerKingdom.isOldMember(traitor))
+					{
+						playerKingdom.addTraitor(Bukkit.getOfflinePlayer(traitor.getUniqueId()));
+						player.sendMessage("Ce vilain traître a bien été ajouté.");
+						player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 5, 1);
+						
+					}
+					else if (playerKingdom.isMember(traitor))
+					{
+						playerKingdom.removeMember(traitor);
+						playerKingdom.addTraitor(Bukkit.getOfflinePlayer(traitor.getUniqueId()));
+						player.sendMessage("Ce vilain traître a bien été expulsé du royaume !");
+						player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 5, 1);
+						
+					}
+					else
+					{
+						player.sendMessage("Ce joueur n'a jamais été dans ce royaume, il ne peut pas vous avoir trahi.");
+						player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 1);						
+					}
+										
+				}
+				else
+				{					
+					player.sendMessage(Message.KINGDOM_INVITATION_NAME_DONT_CONNECT(msg));
+					player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);				
+				}
+			}
+			
+			MenuList.traitorsMenu(player).openMenu();
+			getNameOfTraitor.remove(player);
+		}		
+		else if (getNameOfGrade.contains(player))
+		{
 			e.setCancelled(true);
 			String msg = e.getMessage();
 			String[] getSpace = msg.split(" ");
 			if(getSpace.length == 1){
-				if(HumineKingdom.getPlayerKingdom(player).getGrade(msg) != null){
+				if(HumineKingdom.getKingdomManager().getPlayerKingdom(player).getGrade(msg) != null){
 					player.sendMessage(Message.GRADE_NAME_CANCEL(msg));
 					player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 					getNameOfGrade.remove(player);
@@ -92,7 +157,7 @@ public class PlayerChatEvent implements Listener {
 				}
 				player.sendMessage(Message.GRADE_VALIDE_CONSTRUCT);
 				player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 5, 1);
-				HumineKingdom.getPlayerKingdom(player).addGrade(new Grade(HumineKingdom.getPlayerKingdom(player), msg));
+				HumineKingdom.getKingdomManager().getPlayerKingdom(player).addGrade(new Grade(HumineKingdom.getKingdomManager().getPlayerKingdom(player), msg));
 				MenuList.gradeListMenu(player).openMenu();
 				
 			}else{				
@@ -110,7 +175,7 @@ public class PlayerChatEvent implements Listener {
 			String[] getSpace = msg.split(" ");
 			
 			if(getSpace.length == 1){
-				if(HumineKingdom.getPlayerKingdom(player).getShematic(msg) != null){
+				if(HumineKingdom.getKingdomManager().getPlayerKingdom(player).getShematic(msg) != null){
 					player.sendMessage(Message.SHEMATIC_NAME_CANCEL(msg));
 					player.playSound(player.getLocation(), Sound.ENTITY_SHULKER_AMBIENT, 5, 5);
 					getNameOfGrade.remove(player);
@@ -118,7 +183,7 @@ public class PlayerChatEvent implements Listener {
 				}
 				player.sendMessage(Message.SHEMATIC_VALIDE_CONSTRUCT);
 				player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 5, 1);
-				HumineKingdom.getPlayerKingdom(player).addShematic(new Shematic(HumineKingdom.getPlayerKingdom(player), msg, PlayerClick.getShieldGenerator.get(player)));
+				HumineKingdom.getKingdomManager().getPlayerKingdom(player).addShematic(new Shematic(HumineKingdom.getKingdomManager().getPlayerKingdom(player), msg, PlayerClick.getShieldGenerator.get(player)));
 				MenuList.shematicMenu(player).openMenu();
 				PlayerClick.getShieldGenerator.remove(player);
 				
@@ -132,29 +197,26 @@ public class PlayerChatEvent implements Listener {
 			
 		} else {
 			
-			if(HumineKingdom.getPlayerGrade(player) != null){
-				if(HumineKingdom.getPlayerGrade(player).containPermission(Permissions.CHAT.getPermission())){
+			if(HumineKingdom.getKingdomManager().getPlayerGrade(player) != null){
+				if(HumineKingdom.getKingdomManager().getPlayerGrade(player).containPermission(Permissions.CHAT.getPermission())){
 					String msg = e.getMessage();
 					String[] args = msg.split("");
 					if(args[0].equalsIgnoreCase("*")){
-						for(OfflinePlayer op : HumineKingdom.getPlayerKingdom(player).getMembers()){
+						for(OfflinePlayer op : HumineKingdom.getKingdomManager().getPlayerKingdom(player).getMembers()){
 							if(op.isOnline()){
-								if(HumineKingdom.getPlayerGrade(player).containPermission(Permissions.CHAT.getPermission())){
+								if(HumineKingdom.getKingdomManager().getPlayerGrade(player).containPermission(Permissions.CHAT.getPermission())){
 									e.setCancelled(true);
 									op.getPlayer().playSound(op.getPlayer().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 5, 5);
-									op.getPlayer().sendMessage(ChatColor.BLACK+"["+ChatColor.DARK_PURPLE+HumineKingdom.getPlayerKingdom(player).getName()+ChatColor.BLACK+"-"+ChatColor.DARK_PURPLE+HumineKingdom.getPlayerGrade(player).getName()+ChatColor.BLACK+"] "+ChatColor.WHITE+player.getName()+ChatColor.WHITE+": "+ChatColor.GRAY+msg.replace("*", ""));								
+									op.getPlayer().sendMessage(ChatColor.BLACK+"["+ChatColor.DARK_PURPLE+HumineKingdom.getKingdomManager().getPlayerKingdom(player).getName()+ChatColor.BLACK+"-"+ChatColor.DARK_PURPLE+HumineKingdom.getKingdomManager().getPlayerGrade(player).getName()+ChatColor.BLACK+"] "+ChatColor.WHITE+player.getName()+ChatColor.WHITE+": "+ChatColor.GRAY+msg.replace("*", ""));								
 								}
 							}
 						}
-						System.out.println("["+HumineKingdom.getPlayerKingdom(player).getName()+"-"+HumineKingdom.getPlayerGrade(player).getName()+"] "+player.getName()+": "+msg.replace("*", ""));
+						System.out.println("["+HumineKingdom.getKingdomManager().getPlayerKingdom(player).getName()+"-"+HumineKingdom.getKingdomManager().getPlayerGrade(player).getName()+"] "+player.getName()+": "+msg.replace("*", ""));
 						
 					}
 				}
 			}
-		}
-		
-		
-		
+		}		
 	}
 
 }

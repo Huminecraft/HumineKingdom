@@ -22,27 +22,40 @@ public class PlayerDie extends GloryEvent {
 		
 		if (death != null && killer != null) {
 			
-			Kingdom dk = HumineKingdom.getPlayerKingdom(death);
-			Kingdom kk = HumineKingdom.getPlayerKingdom(killer);
+			Kingdom kingdomOfDead = HumineKingdom.getKingdomManager().getPlayerKingdom(death);
+			Kingdom kingdomOfKiller = HumineKingdom.getKingdomManager().getPlayerKingdom(killer);
 			
-			if (dk != null && kk != null) {
-				if (!dk.equals(kk)) {
-					dk.setGlory(dk.getGlory() - 35);
-					dk.sendMessageToMembers(Message.LOST_POINTS(35));
-					kk.setGlory(kk.getGlory() + 35);
-					kk.sendMessageToMembers(Message.WIN_POINTS(35));
-				} else {
-					dk.setGlory(dk.getGlory() - 25);
-					dk.sendMessageToMembers(Message.LOST_POINTS(25));
+			if (kingdomOfDead != null && kingdomOfKiller != null)
+			{
+				if (!kingdomOfDead.equals(kingdomOfKiller))
+				{
+					if (kingdomOfDead.getGlory() > 0)
+					{
+						kingdomOfDead.removeGlory(35);
+						kingdomOfDead.sendMessageToMembers(Message.LOST_POINTS(35));
+					}
+					kingdomOfKiller.addGlory(35);
+					kingdomOfKiller.sendMessageToMembers(Message.WIN_POINTS(35));
+				}
+			}
+			else if (kingdomOfDead != null)
+			{
+				if (kingdomOfDead.getGlory() > 0)
+				{
+					kingdomOfDead.removeGlory(35);
+					kingdomOfDead.sendMessageToMembers(Message.LOST_POINTS(25));
 				}
 			}
 			
 		} else if (death != null && killer == null){
 			
-			Kingdom dk = HumineKingdom.getPlayerKingdom(death);
+			Kingdom dk = HumineKingdom.getKingdomManager().getPlayerKingdom(death);
 			
-			dk.setGlory(dk.getGlory() - 25);
-			dk.sendMessageToMembers(Message.LOST_POINTS(25));
+			if (dk != null)
+			{
+				dk.removeGlory(25);
+				dk.sendMessageToMembers(Message.LOST_POINTS(25));
+			}
 		}
 		
 	}

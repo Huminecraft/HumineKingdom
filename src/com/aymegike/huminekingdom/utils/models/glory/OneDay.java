@@ -1,6 +1,7 @@
 package com.aymegike.huminekingdom.utils.models.glory;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.bukkit.entity.Player;
@@ -18,7 +19,6 @@ public class OneDay extends GloryEvent {
 		super(event);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onPlayerBeGlorious(Player player, Event event) {
 		FileManager playerConnection = new FileManager(new File("plugins/HumineKingdom/playerlog.craft"));
@@ -36,13 +36,13 @@ public class OneDay extends GloryEvent {
 			
 			int mounth = Integer.parseInt(playerLine.split(" ")[1]);
 			int date = Integer.parseInt(playerLine.split(" ")[2]);
-			
+						
 			if (mounth != new Date().getMonth() || date != new Date().getDate()) {
 				playerConnection.removeAllLine(playerLine);
 				playerConnection.printLine(player.getUniqueId().toString()+" "+new Date().getMonth()+" "+new Date().getDate());
-				Kingdom kingdom = HumineKingdom.getPlayerKingdom(player);
+				Kingdom kingdom = HumineKingdom.getKingdomManager().getPlayerKingdom(player);
 				if (kingdom != null) {
-					kingdom.setGlory(kingdom.getGlory() + 10);
+					kingdom.addGlory(10);
 					kingdom.sendMessageToMembers(Message.WIN_POINTS(10));
 				}
 			}

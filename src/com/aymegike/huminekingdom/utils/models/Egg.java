@@ -54,8 +54,8 @@ public class Egg {
 		registerBlockBefore();
 		spawnParticle(Particle.EXPLOSION_HUGE, this.location, 0, 0, 0, 0);
 		playSound(Sound.ENTITY_GENERIC_EXPLODE, location);
-		spiral(location);
 		structure(location);
+		spiral(location);
 		for (Player pls : Bukkit.getOnlinePlayers()) {
 			pls.sendMessage(Message.EGG_NEW_KINGDOM(kingdom.getMembers().get(0)));
 			pls.playSound(pls.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 5, 1);
@@ -157,7 +157,7 @@ public class Egg {
 			
 		}).start();
 		
-		task = Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("HumineKingdom"), new Runnable(){
+		task = Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("HumineKingdom"), new Runnable() {
 			float y = 0;
 			@Override
 			public void run() {
@@ -173,9 +173,7 @@ public class Egg {
 					new Timer(Bukkit.getPluginManager().getPlugin("HumineKingdom"), 2, new TimerFinishListener() {
 						
 						@Override
-						public void execute() {
-							new Location(world, loc.getX(), loc.getY()+maxHeight, loc.getZ()).getBlock().setType(Material.DRAGON_EGG);
-							
+						public void execute() {							
 							spawnParticle(Particle.EXPLOSION_HUGE, new Location(world, loc.getBlockX(), loc.getY()+maxHeight, loc.getBlockZ()), 0, 0, 0, 0);
 							playSound(Sound.ENTITY_ENDER_DRAGON_GROWL, loc);
 							world.strikeLightningEffect(new Location(world, loc.getBlockX(), loc.getY()+maxHeight, loc.getBlockZ()));
@@ -386,14 +384,25 @@ public class Egg {
 					new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).getBlock().setType(Material.BEDROCK);
 					timer = 20;
 					particleEgg();
+					
+
+					Location l = new Location(loc.getWorld(), x+0.5, y+I+1, z+0.5);
+					Block b = l.getBlock();
+					b.setType(Material.DRAGON_EGG);
+					BlockData bd = b.getBlockData();
+					
+					
+					Bukkit.getWorld(loc.getWorld().getName()).spawnFallingBlock(l, bd);
+					l.getBlock().setType(Material.AIR);
 				}
-				if(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).getBlock().getType() == Material.QUARTZ_BLOCK){
+				if(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).getBlock().getType() == Material.QUARTZ_BLOCK)
+				{
 					new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).getBlock().setType(Material.PURPUR_BLOCK);
-				}else if(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).getBlock().getType() == Material.PURPUR_BLOCK){
-					new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).getBlock().setType(Material.QUARTZ_BLOCK);
 				}
-				
-				
+				else if(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).getBlock().getType() == Material.PURPUR_BLOCK)
+				{
+					new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY()-1, loc.getBlockZ()).getBlock().setType(Material.QUARTZ_BLOCK);
+				}				
 			}
 			
 		},5, 5);

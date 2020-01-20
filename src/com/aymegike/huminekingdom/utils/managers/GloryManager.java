@@ -3,11 +3,13 @@ package com.aymegike.huminekingdom.utils.managers;
 import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -32,15 +34,20 @@ public class GloryManager implements Listener {
 		ges.add(new KingUseEgg("PlayerInteractEvent"));
 		ges.add(new PlaceBeacon("BlockPlaceEvent"));
 		ges.add(new DestroyBeacon("BlockBreakEvent"));
+		ges.add(new DestroyBeacon("EntityExplodeEvent"));
 		ges.add(new OneDay("PlayerJoinEvent"));
 		ges.add(new PlaceTnt("BlockPlaceEvent"));
+		ges.add(new PlaceTnt("PlayerInteractEvent"));
 		ges.add(new ActiveTnt("PlayerInteractEvent"));
 		ges.add(new PlayerDie("PlayerDeathEvent"));
 	}
 	
-	private void update(Player player, Event event) {
-		for (GloryEvent ge : ges) {
-			if (ge.getEvent().equalsIgnoreCase(event.getEventName())) {
+	private void update(Player player, Event event)
+	{
+		for (GloryEvent ge : ges)
+		{
+			if (ge.getEvent().equalsIgnoreCase(event.getEventName()))
+			{
 				ge.onPlayerBeGlorious(player, event);
 			}
 		}
@@ -68,6 +75,13 @@ public class GloryManager implements Listener {
 	@EventHandler
 	public void onPlayerBreakBlock(BlockBreakEvent e) {
 		update(e.getPlayer(), e);
+	}
+	
+	@EventHandler
+	public void onEntityExplode(EntityExplodeEvent e) {
+
+		System.out.println("ON PASSE LEVENT");
+		update(null, e);
 	}
 	
 	@EventHandler

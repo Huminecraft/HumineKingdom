@@ -45,7 +45,19 @@ public class Permissions {
 		}
 	});
 	
-	public final static PermData GRADE = new PermData("GRADE", "kingdom.gestion.grade", new FillList() {
+
+	public final static PermData EXCLUDE = new PermData("EXCLUDE", "kingdom.gestion.exclude", new FillList() {
+		
+		@Override
+		public ArrayList<String> fillList() {
+			ArrayList<String> list = new ArrayList<String>();
+			list.add("Donne l'autorisation");
+			list.add("d'exclure des membres de votre royaume");
+			return list;
+		}
+	});
+	
+	public final static PermData MANAGE_GRADE = new PermData("GRADE", "kingdom.gestion.grade", new FillList() {
 		
 		@Override
 		public ArrayList<String> fillList() {
@@ -98,15 +110,29 @@ public class Permissions {
 		
 	});
 	
+	public final static PermData TRAITOR_GESTION = new PermData("TRAITOR_GESTION", "kingdom.gestion.traitor", new FillList() {
+		
+		@Override
+		public ArrayList<String> fillList() {
+			ArrayList<String> list = new ArrayList<String>();
+			list.add("Donne l'autorisation d'ajouter, ou");
+			list.add("de supprimer, un traître");
+			return list;
+		}
+		
+	});
+	
 	public static ArrayList<PermData> getAllPermissions(){
 		ArrayList<PermData> perms = new ArrayList<PermData>();
 		perms.add(BUILD);
 		perms.add(BREAK);
 		perms.add(INVITE);
-		perms.add(GRADE);
+		perms.add(EXCLUDE);
+		perms.add(MANAGE_GRADE);
 		perms.add(CHAT);
 		perms.add(INVITE_NEW_PLAYER);
 		perms.add(BEACON_GESTION);
+		perms.add(TRAITOR_GESTION);
 		return perms;
 	}
 

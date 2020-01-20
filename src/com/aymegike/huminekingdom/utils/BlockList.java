@@ -33,6 +33,7 @@ public class BlockList {
 		Material.JUNGLE_BUTTON,
 		Material.OAK_BUTTON,
 		Material.SPRUCE_BUTTON,
+		Material.RAIL
 	};
 	
 	private static Material[] topBeaconList = {
@@ -84,7 +85,7 @@ public class BlockList {
 		return false;
 	}
 	
-	public static boolean isInWhitList(Material m) {
+	public static boolean isInWhiteList(Material m) {
 		for (Material material : whiteList) {
 			if (material == m) {
 				return true;

@@ -7,6 +7,7 @@ import com.aymegike.huminekingdom.HumineKingdom;
 import com.aymegike.huminekingdom.listener.events.BreakBlock;
 import com.aymegike.huminekingdom.listener.events.Death;
 import com.aymegike.huminekingdom.listener.events.ExplosionBlock;
+import com.aymegike.huminekingdom.listener.events.InventoryListener;
 import com.aymegike.huminekingdom.listener.events.ItemDrop;
 import com.aymegike.huminekingdom.listener.events.PlaceBlock;
 import com.aymegike.huminekingdom.listener.events.PlayerChatEvent;
@@ -28,6 +29,7 @@ public class EventManager {
 		pm.registerEvents(new PlayerLeft(), pl);
 		pm.registerEvents(new ItemDrop(), pl);
 		pm.registerEvents(new Death(), pl);
+		pm.registerEvents(new InventoryListener(), pl);
 	}
 
 }

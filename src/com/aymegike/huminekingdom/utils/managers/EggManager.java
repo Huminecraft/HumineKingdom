@@ -20,13 +20,15 @@ public class EggManager {
 	private Kingdom kingdom = null;
 	
 	
-	public EggManager() {
-		
+	public EggManager()
+	{		
 		fm = new com.aypi.manager.FileManager(new File(com.aymegike.huminekingdom.utils.managers.FileManager.KINGDOM_FILE+"/../egg.craft"));
 		
-		for (String line : fm.getTextFile()) {
+		for (String line : fm.getTextFile())
+		{
 			String[] args = line.split(" ");
-			if (args[0].equalsIgnoreCase("location:")) {
+			if (args[0].equalsIgnoreCase("location:"))
+			{
 				loc = new Location(Bukkit.getWorld(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
 			}
 			else if (args[0].equalsIgnoreCase("kingdom:")) {
@@ -65,13 +67,15 @@ public class EggManager {
 		return egg;
 	}
 	
-	public void removeEgg(Player player) {
+	public void removeEgg(Player player)
+	{
+		Kingdom playerKingdom = HumineKingdom.getKingdomManager().getPlayerKingdom(player);
+		playerKingdom.addGlory(400);
+		egg.getKingdom().removeGlory(400);
 		
-		HumineKingdom.getPlayerKingdom(player).setGlory(HumineKingdom.getPlayerKingdom(player).getGlory() + 400);
-		egg.getKingdom().setGlory(egg.getKingdom().getGlory() - 400);
-		
-		if (!HumineKingdom.getPlayerKingdom(player).equals(egg.getKingdom())) {
-			HumineKingdom.getPlayerKingdom(player).sendMessageToMembers(Message.WIN_POINTS(400));
+		if (!playerKingdom.equals(egg.getKingdom()))
+		{
+			playerKingdom.sendMessageToMembers(Message.WIN_POINTS(400));
 			egg.getKingdom().sendMessageToMembers(Message.LOST_POINTS(400));
 		}
 			
